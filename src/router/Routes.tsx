@@ -9,13 +9,22 @@ const Loadable = (Component: any) => (props: JSX.IntrinsicAttributes) =>
     </Suspense>
   );
 
+// layout page
+const AppLayout = Loadable(lazy(() => import("../layout/AppLayout")));
+
 // routable pages
 const HomePage = Loadable(lazy(() => import("../pages/HomePage")));
 
 const Routes: RouteObject[] = [
   {
     path: "/",
-    element: <HomePage />,
+    element: <AppLayout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+    ],
   },
 ];
 
