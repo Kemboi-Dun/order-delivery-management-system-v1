@@ -10,7 +10,7 @@ const breadCrumbItems = [
 
 const CustomersList = () => {
   return (
-    <div style={{ padding: "1em" }}>
+    <div >
       <Breadcrumb items={breadCrumbItems} />
     </div>
   );

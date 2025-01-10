@@ -13,7 +13,7 @@ const outletStyle: React.CSSProperties = {
   width: "95%",
   margin: "auto",
   height: "87vh",
-  backgroundColor: "#D3D3D3",
+  // backgroundColor: "#D3D3D3",
 };
 
 const AppLayout = () => {
