@@ -9,7 +9,9 @@ const { Content } = Layout;
 
 // content/outlet style
 const outletStyle: React.CSSProperties = {
-  width: "100%",
+  maxWidth: "100%",
+  width: "95%",
+  margin: "auto",
   height: "87vh",
   backgroundColor: "#D3D3D3",
 };
