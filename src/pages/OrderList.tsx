@@ -11,7 +11,7 @@ import {
   Table,
   Typography,
 } from "antd";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import orderList from "../data/Orders.json";
 import { useFormattedDateString } from "../hooks/DateHook";
@@ -19,16 +19,6 @@ import { FilterFilled, SearchOutlined } from "@ant-design/icons";
 
 import get from "lodash/get";
 import { useNavigate } from "react-router-dom";
-
-// Breadcrumb items
-const breadCrumbItems = [
-  {
-    title: "Orders",
-  },
-  {
-    title: "Pending Orders",
-  },
-];
 
 // filter values
 
@@ -54,6 +44,7 @@ const OrdersTable: React.FC = () => {
   }
 
   const [filteredInfo, setFilteredInfo] = useState<FilteredInfo>({});
+
   const [filteredData, setStatusFilter] = useState<any[]>(orders);
 
   const searchInput = useRef<any>(null);
@@ -339,6 +330,21 @@ const OrdersTable: React.FC = () => {
 
   const [activeButton, setActiveButton] = useState("all");
 
+  useEffect(() => {
+    //check the curret active status and store in the local storage
+    // TODO: Use api filter directly
+    if (localStorage.length && localStorage.getItem("active_order_status")) {
+      const activeFilterStatus: any = localStorage.getItem(
+        "active_order_status"
+      );
+      setActiveButton(activeFilterStatus);
+      filterByStatus(activeFilterStatus);
+    } else {
+      setStatusFilter(orders);
+      setActiveButton("all");
+    }
+  }, []);
+
   return (
     <>
       <Flex justify="space-between" align="center" gap="large">
@@ -353,6 +359,7 @@ const OrdersTable: React.FC = () => {
             onClick={() => {
               filterByStatus("all");
               setActiveButton("all");
+              localStorage.removeItem("active_order_status");
             }}
           >
             All Orders
@@ -362,6 +369,7 @@ const OrdersTable: React.FC = () => {
             onClick={() => {
               filterByStatus("Processing");
               setActiveButton("Processing");
+              localStorage.setItem("active_order_status", "Processing");
             }}
           >
             <Badge status="processing" />
@@ -372,6 +380,7 @@ const OrdersTable: React.FC = () => {
             onClick={() => {
               filterByStatus("Dispatched");
               setActiveButton("Dispatched");
+              localStorage.setItem("active_order_status", "Dispatched");
             }}
           >
             <Badge status="warning" />
@@ -382,6 +391,7 @@ const OrdersTable: React.FC = () => {
             onClick={() => {
               filterByStatus("Delivered");
               setActiveButton("Delivered");
+              localStorage.setItem("active_order_status", "Delivered");
             }}
           >
             <Badge status="success" />
@@ -392,6 +402,7 @@ const OrdersTable: React.FC = () => {
             onClick={() => {
               filterByStatus("Canceled");
               setActiveButton("Canceled");
+              localStorage.setItem("active_order_status", "Canceled");
             }}
           >
             <Badge status="error" />
