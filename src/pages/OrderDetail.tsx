@@ -11,7 +11,10 @@ import {
   Typography,
 } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+
 import orderList from "../data/Orders.json";
+import pickUpStations from "../data/PickUpPoints.json";
+
 import { useFormattedDateString } from "../hooks/DateHook";
 import LiveLocationMap from "../components/LiveLocationMap";
 
@@ -27,9 +30,9 @@ const livemapStyles: React.CSSProperties = {
 };
 
 const trackOrderMapStyles: React.CSSProperties = {
-    width: "100%",
-    height: "60vh",
-  };
+  width: "100%",
+  height: "60vh",
+};
 
 const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
   orderDetail,
@@ -42,7 +45,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
     longitude: orderDetail?.shippingAddress?.longitude,
     location: `${orderDetail?.shippingAddress?.name}, ${orderDetail?.shippingAddress?.county}`,
   };
- 
+
   // open customer drawer:
   const viewCustomerInfo = () => setCustomerDrawer(true);
   const closeCustomerDrawer = () => setCustomerDrawer(false);
@@ -52,9 +55,15 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
 
   const openTrackOrderModal = () => setTrackOderModal(true);
   const closeTrackOrderModal = () => setTrackOderModal(false);
-  const orderCoordinates = {
-    latitude: 0,
-    longitude: 0,
+
+  const orderDetails = {
+    pickUpStationDetails: {
+      latitude: pickUpStations[0].latitude,
+      longitude: pickUpStations[0].longitude,
+      name: pickUpStations[0].name,
+      id: pickUpStations[0].id,
+      status: pickUpStations[0].status,
+    },
     description: {
       orderId: orderDetail?.orderId,
       status: orderDetail?.status,
@@ -107,7 +116,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
         <MemoizedTrackOrderModal
           openModal={openTrackOrder}
           closeModal={closeTrackOrderModal}
-          orderCoordinates={orderCoordinates}
+          orderDetails={orderDetails}
           customerCoordinates={customerCoordinates}
         />
 
@@ -211,10 +220,7 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
           </Flex>
         </Flex>
         <div style={livemapStyles}>
-          <LiveLocationMap
-            customerCoordinates={customerCoordinates}
-           
-          />
+          <LiveLocationMap customerCoordinates={customerCoordinates} />
         </div>
       </Flex>
     </Drawer>
@@ -226,9 +232,15 @@ const MemoizedUserInfo = React.memo<UserInfoType>(UserDetailDrawer);
 interface TrackOrderModalInterface {
   openModal: boolean;
   closeModal: () => void;
-  orderCoordinates: {
-    longitude: number;
-    latitude: number;
+  orderDetails: {
+    pickUpStationDetails: {
+      id: number;
+      name: string;
+      longitude: number;
+      latitude: number;
+      status: string;
+    };
+
     description: {
       orderId: string;
       status: string;
@@ -243,7 +255,7 @@ interface TrackOrderModalInterface {
 
 // Track order Modal
 const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
-  orderCoordinates,
+  orderDetails,
   customerCoordinates,
   openModal,
   closeModal,
@@ -254,9 +266,9 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
         <>
           <Flex gap="large" justify="start" align="center">
             <Space align="center" size="large">
-              <p>Track order: {orderCoordinates?.description?.orderId}</p>
+              <p>Track order: {orderDetails?.description?.orderId}</p>
 
-              <Tag color="orange">{orderCoordinates?.description?.status}</Tag>
+              <Tag color="orange">{orderDetails?.description?.status}</Tag>
             </Space>
             <Button icon={<i className="fa-solid fa-route"></i>} type="primary">
               Get Route
@@ -268,7 +280,7 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
       footer={null}
       open={openModal}
       closable
-      onClose={closeModal}
+      onCancel={()=>closeModal()}
       width={{
         xs: "90%",
         sm: "80%",
@@ -281,7 +293,7 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
       <div style={trackOrderMapStyles}>
         <LiveLocationMap
           customerCoordinates={customerCoordinates}
-          orderCoordinates={orderCoordinates}
+          orderDetails={orderDetails}
         />
       </div>
     </Modal>

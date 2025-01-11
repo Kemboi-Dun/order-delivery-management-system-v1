@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { Map, Marker, NavigationControl, Popup } from "react-map-gl";
-import { Flex } from "antd";
+import { Badge, Flex, Space, Tooltip } from "antd";
 
 interface LiveLocationMapInterface {
   customerCoordinates: {
@@ -9,9 +9,14 @@ interface LiveLocationMapInterface {
     longitude: number;
     location: string;
   };
-  orderCoordinates?: {
-    longitude: number;
-    latitude: number;
+  orderDetails?: {
+    pickUpStationDetails: {
+      id: number;
+      name: string;
+      longitude: number;
+      latitude: number;
+      status: string;
+    };
     description: {
       orderId: string;
       status: string;
@@ -24,7 +29,7 @@ const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   customerCoordinates,
-  orderCoordinates
+  orderDetails,
 }) => {
   const [viewPort, setViewPort] = useState({
     latitude: -1.286389,
@@ -32,14 +37,26 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
     zoom: 14,
   });
 
+  // manage customer location state
   const [userLocation, setUserLocation] = useState<
     { latitude: number; longitude: number; location: string } | any
   >(null);
+
   const [userPopUp, setUserPopup] = useState(true);
 
+  // manage pick up location state
+  const [pickUpLocation, setPickUpLocation] = useState<
+    { latitude: number; longitude: number; location: string } | any
+  >(null);
+  const [pickUpLocationPopUp, setPickUpLocationPopUp] = useState(true);
+
   useEffect(() => {
-    const { latitude, longitude } = customerCoordinates;
+    const { latitude, longitude } = orderDetails
+      ? orderDetails?.pickUpStationDetails
+      : customerCoordinates;
     setUserLocation(customerCoordinates);
+    setPickUpLocation(orderDetails?.pickUpStationDetails);
+
     setViewPort((prev) => ({
       ...prev,
       latitude,
@@ -56,7 +73,7 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onMove={(e) => setViewPort(e.viewState)}
       >
-        <NavigationControl/>
+        <NavigationControl />
         {userLocation && (
           <>
             <Marker
@@ -79,6 +96,49 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
                 <Flex gap="small" align="center">
                   <i className="fa-solid fa-street-view"></i>
                   <p>{userLocation?.location}</p>
+                </Flex>
+              </Popup>
+            )}
+          </>
+        )}
+        {pickUpLocation && (
+          <>
+            <Marker
+              latitude={pickUpLocation?.latitude}
+              longitude={pickUpLocation?.longitude}
+              color="red"
+              onClick={(e) => {
+                e.originalEvent.stopPropagation();
+                setPickUpLocationPopUp(true);
+              }}
+              style={{ cursor: "pointer", pointerEvents: "auto" }}
+            ></Marker>
+
+            {pickUpLocationPopUp && (
+              <Popup
+                latitude={pickUpLocation?.latitude}
+                longitude={pickUpLocation?.longitude}
+                anchor="bottom"
+                onClose={() => setPickUpLocationPopUp(false)}
+              >
+                <Flex gap="small" align="center" vertical>
+                  <Space align="center" size="small">
+                    <i className="fa-solid fa-boxes-packing"></i>
+                    <p>{pickUpLocation?.name}</p>
+                    <Tooltip title="Status">
+                      <Badge
+                        status={
+                          pickUpLocation?.status === "active"
+                            ? "success"
+                            : "error"
+                        }
+                        text={<small>{pickUpLocation?.status}</small>}
+                      />
+                    </Tooltip>
+                  </Space>
+                  <p>
+                    Order ID: <b>{orderDetails?.description?.orderId}</b>
+                  </p>
                 </Flex>
               </Popup>
             )}
