@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Map, Marker, NavigationControl, Popup } from "react-map-gl";
-import { Badge, Flex, Space, Tooltip } from "antd";
+import Map, {
+  Layer,
+  Marker,
+  NavigationControl,
+  Popup,
+  Source,
+} from "react-map-gl";
+import { Badge, Button, Flex, Space, Tooltip } from "antd";
+import OrdersService from "../services/Services";
 
 interface LiveLocationMapInterface {
   customerCoordinates: {
@@ -50,22 +57,73 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   >(null);
   const [pickUpLocationPopUp, setPickUpLocationPopUp] = useState(true);
 
+  // manage route state
+  const [deliveryRoute, setDeliveryRoute] = useState(null);
+
+  // get routes
+  // create origin and destinations for routing
+  const origin: any[] = [
+    orderDetails?.pickUpStationDetails?.latitude,
+    orderDetails?.pickUpStationDetails?.longitude,
+  ];
+  const destination: number[] = [
+    customerCoordinates?.latitude,
+    customerCoordinates?.longitude,
+  ];
+
+  // get delivery route
+
+  const getDeliveryRoute = useCallback(async () => {
+    try {
+      const response = await OrdersService.getDeliveryRoute(
+        origin,
+        destination
+      );
+
+      if (response?.routes?.length) {
+        console.log("RESPONSE --- ", response?.routes[0]?.geometry);
+        setDeliveryRoute(response?.routes[0]?.geometry);
+      } else {
+        console.log("Routes not found");
+      }
+    } catch (error) {
+      console.log("Error getting routes: ---- ", error);
+      throw error;
+    }
+  }, [origin, destination]);
+
+  // route source and layer
+
+  const deliveryRouteData = useMemo(() => {
+    if (!deliveryRoute) return null;
+    return {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: deliveryRoute,
+        },
+      ],
+    };
+  }, [deliveryRoute]);
+
   useEffect(() => {
     const { latitude, longitude } = orderDetails
       ? orderDetails?.pickUpStationDetails
       : customerCoordinates;
     setUserLocation(customerCoordinates);
     setPickUpLocation(orderDetails?.pickUpStationDetails);
-
-    setViewPort((prev) => ({
-      ...prev,
-      latitude,
-      longitude,
-    }));
-  }, []);
+    if (latitude && longitude) {
+      setViewPort((prev) => ({
+        ...prev,
+        latitude,
+        longitude,
+      }));
+    }
+  }, [orderDetails, customerCoordinates]);
 
   return (
-    <div style={{ width: "100%", height: "100%", borderRadius: "4em" }}>
+    <div style={{ width: "100%", height: "100%" }}>
       <Map
         {...viewPort}
         style={{ width: "100%", height: "100%" }}
@@ -74,6 +132,7 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
         onMove={(e) => setViewPort(e.viewState)}
       >
         <NavigationControl />
+
         {userLocation && (
           <>
             <Marker
@@ -139,9 +198,36 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
                   <p>
                     Order ID: <b>{orderDetails?.description?.orderId}</b>
                   </p>
+                  <Button
+                    icon={<i className="fa-solid fa-route"></i>}
+                    type="primary"
+                    onClick={() => getDeliveryRoute()}
+                    style={{ margin: "1em 0" }}
+                    size="small"
+                  >
+                    Get Route
+                  </Button>
+                  {deliveryRoute && (
+                    <p>Route active {deliveryRoute?.coordinates.length}</p>
+                  )}
                 </Flex>
               </Popup>
             )}
+          </>
+        )}
+
+        {deliveryRoute && (
+          <>
+            <Source id="delivery-route" type="geojson" data={deliveryRouteData}>
+              <Layer
+                id="delivery-route-line"
+                type="line"
+                paint={{
+                  "line-color": "#3b9ddd",
+                  "line-width": 5,
+                }}
+              />
+            </Source>
           </>
         )}
       </Map>

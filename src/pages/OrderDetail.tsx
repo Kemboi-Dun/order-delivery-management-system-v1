@@ -18,6 +18,7 @@ import pickUpStations from "../data/PickUpPoints.json";
 import { useFormattedDateString } from "../hooks/DateHook";
 import LiveLocationMap from "../components/LiveLocationMap";
 
+
 const { Title } = Typography;
 interface OrderDetailsInterface {
   orderDetail: any;
@@ -31,7 +32,7 @@ const livemapStyles: React.CSSProperties = {
 
 const trackOrderMapStyles: React.CSSProperties = {
   width: "100%",
-  height: "60vh",
+  height: "68vh",
 };
 
 const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
@@ -260,6 +261,18 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
   openModal,
   closeModal,
 }) => {
+  // create origin and destinations for routing
+  //   const origin: [number, number] = [
+  //     orderDetails?.pickUpStationDetails?.latitude,
+  //     orderDetails?.pickUpStationDetails?.longitude,
+  //   ];
+  //   const destination: [number, number] = [
+  //     customerCoordinates?.latitude,
+  //     customerCoordinates?.longitude,
+  //   ];
+
+  //   const getDeliveryRoute = useGetOrderRoute({ origin, destination })
+
   return (
     <Modal
       title={
@@ -270,9 +283,9 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
 
               <Tag color="orange">{orderDetails?.description?.status}</Tag>
             </Space>
-            <Button icon={<i className="fa-solid fa-route"></i>} type="primary">
+            {/* <Button icon={<i className="fa-solid fa-route"></i>} type="primary">
               Get Route
-            </Button>
+            </Button> */}
           </Flex>
         </>
       }
@@ -280,22 +293,25 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
       footer={null}
       open={openModal}
       closable
-      onCancel={()=>closeModal()}
+      onCancel={() => closeModal()}
       width={{
         xs: "90%",
         sm: "80%",
         md: "70%",
-        lg: "60%",
-        xl: "50%",
+        lg: "80%",
+        xl: "80%",
         xxl: "40%",
       }}
+   
     >
       <div style={trackOrderMapStyles}>
+
         <LiveLocationMap
           customerCoordinates={customerCoordinates}
           orderDetails={orderDetails}
         />
       </div>
+    
     </Modal>
   );
 };
