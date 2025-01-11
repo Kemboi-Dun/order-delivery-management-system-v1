@@ -5,7 +5,9 @@ import {
   Divider,
   Drawer,
   Flex,
+  Modal,
   Space,
+  Tag,
   Typography,
 } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,16 +26,40 @@ const livemapStyles: React.CSSProperties = {
   height: "38vh",
 };
 
+const trackOrderMapStyles: React.CSSProperties = {
+    width: "100%",
+    height: "60vh",
+  };
+
 const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
   orderDetail,
 }) => {
   // customer drawer states
   const [openCustomerDrawer, setCustomerDrawer] = useState(false);
 
+  const customerCoordinates = {
+    latitude: orderDetail?.shippingAddress?.latitude,
+    longitude: orderDetail?.shippingAddress?.longitude,
+    location: `${orderDetail?.shippingAddress?.name}, ${orderDetail?.shippingAddress?.county}`,
+  };
+ 
   // open customer drawer:
   const viewCustomerInfo = () => setCustomerDrawer(true);
   const closeCustomerDrawer = () => setCustomerDrawer(false);
 
+  // track order modal state
+  const [openTrackOrder, setTrackOderModal] = useState(false);
+
+  const openTrackOrderModal = () => setTrackOderModal(true);
+  const closeTrackOrderModal = () => setTrackOderModal(false);
+  const orderCoordinates = {
+    latitude: 0,
+    longitude: 0,
+    description: {
+      orderId: orderDetail?.orderId,
+      status: orderDetail?.status,
+    },
+  };
   return (
     <div>
       <Flex gap="large" align="center" justify="space-between">
@@ -61,7 +87,33 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
           customerAddress={orderDetail?.shippingAddress}
           onClose={closeCustomerDrawer}
           open={openCustomerDrawer}
+          customerCoordinates={customerCoordinates}
         />
+      </Flex>
+
+      <Flex
+        gap="middle"
+        justify="space-between"
+        align="center"
+        style={{ margin: "1em 0" }}
+      >
+        <Button
+          icon={<i className="fa-solid fa-location-arrow"></i>}
+          type="dashed"
+          onClick={openTrackOrderModal}
+        >
+          Track order
+        </Button>
+        <MemoizedTrackOrderModal
+          openModal={openTrackOrder}
+          closeModal={closeTrackOrderModal}
+          orderCoordinates={orderCoordinates}
+          customerCoordinates={customerCoordinates}
+        />
+
+        <p>
+          Total amount: <b> KES {orderDetail?.total}</b>
+        </p>
       </Flex>
     </div>
   );
@@ -75,6 +127,12 @@ interface UserInfoType {
     email: string;
     phone: string;
   };
+  customerCoordinates: {
+    latitude: number;
+    longitude: number;
+    location: string;
+  };
+
   customerAddress: {
     name: string;
     addressLine1: string;
@@ -83,8 +141,6 @@ interface UserInfoType {
     county: string;
     postalCode: string;
     country: string;
-    latitude: number;
-    longitude: number;
   };
   onClose: () => void;
   open: boolean;
@@ -93,15 +149,10 @@ interface UserInfoType {
 const UserDetailDrawer: React.FC<UserInfoType> = ({
   userDetails,
   customerAddress,
+  customerCoordinates,
   open,
   onClose,
 }) => {
-  const customerCoordinates = {
-    latitude: customerAddress?.latitude,
-    longitude: customerAddress?.longitude,
-    location: `${customerAddress?.name}, ${customerAddress?.county}`,
-  };
-
   return (
     <Drawer
       title="User info"
@@ -160,14 +211,84 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
           </Flex>
         </Flex>
         <div style={livemapStyles}>
-          <LiveLocationMap customerCoordinates={customerCoordinates} />
+          <LiveLocationMap
+            customerCoordinates={customerCoordinates}
+           
+          />
         </div>
       </Flex>
     </Drawer>
   );
 };
 
-const MemoizedUserInfo = React.memo(UserDetailDrawer);
+const MemoizedUserInfo = React.memo<UserInfoType>(UserDetailDrawer);
+
+interface TrackOrderModalInterface {
+  openModal: boolean;
+  closeModal: () => void;
+  orderCoordinates: {
+    longitude: number;
+    latitude: number;
+    description: {
+      orderId: string;
+      status: string;
+    };
+  };
+  customerCoordinates: {
+    longitude: number;
+    latitude: number;
+    location: string;
+  };
+}
+
+// Track order Modal
+const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
+  orderCoordinates,
+  customerCoordinates,
+  openModal,
+  closeModal,
+}) => {
+  return (
+    <Modal
+      title={
+        <>
+          <Flex gap="large" justify="start" align="center">
+            <Space align="center" size="large">
+              <p>Track order: {orderCoordinates?.description?.orderId}</p>
+
+              <Tag color="orange">{orderCoordinates?.description?.status}</Tag>
+            </Space>
+            <Button icon={<i className="fa-solid fa-route"></i>} type="primary">
+              Get Route
+            </Button>
+          </Flex>
+        </>
+      }
+      centered
+      footer={null}
+      open={openModal}
+      closable
+      onClose={closeModal}
+      width={{
+        xs: "90%",
+        sm: "80%",
+        md: "70%",
+        lg: "60%",
+        xl: "50%",
+        xxl: "40%",
+      }}
+    >
+      <div style={trackOrderMapStyles}>
+        <LiveLocationMap
+          customerCoordinates={customerCoordinates}
+          orderCoordinates={orderCoordinates}
+        />
+      </div>
+    </Modal>
+  );
+};
+
+const MemoizedTrackOrderModal = React.memo(TrackOrderModal);
 
 const OrderDetail = () => {
   const urlParams = useParams();

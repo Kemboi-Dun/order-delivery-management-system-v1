@@ -9,6 +9,14 @@ interface LiveLocationMapInterface {
     longitude: number;
     location: string;
   };
+  orderCoordinates?: {
+    longitude: number;
+    latitude: number;
+    description: {
+      orderId: string;
+      status: string;
+    };
+  };
 }
 
 // mapbox access token
@@ -16,6 +24,7 @@ const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   customerCoordinates,
+  orderCoordinates
 }) => {
   const [viewPort, setViewPort] = useState({
     latitude: -1.286389,
