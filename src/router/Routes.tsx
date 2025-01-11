@@ -15,6 +15,7 @@ const AppLayout = Loadable(lazy(() => import("../layout/AppLayout")));
 // routable pages
 const HomePage = Loadable(lazy(() => import("../pages/HomePage")));
 const OrdersList = Loadable(lazy(() => import("../pages/OrderList")));
+const OrderDetail = Loadable(lazy(() => import("../pages/OrderDetail")));
 
 const Routes: RouteObject[] = [
   {
@@ -28,6 +29,10 @@ const Routes: RouteObject[] = [
       {
         path: "/orders",
         element: <OrdersList />,
+      },
+      {
+        path: "/order/:order_id",
+        element: <OrderDetail />,
       },
     ],
   },

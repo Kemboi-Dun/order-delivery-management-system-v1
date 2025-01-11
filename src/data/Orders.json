@@ -1,117 +1,122 @@
 [
-    {
-      "id":1,
-      "orderId": "ORD001",
-      "customer": {
-        "id": "CUST001",
-        "name": "Mwangi Wafula",
-        "email": "mwangiw@example.com",
-        "phone": "+254712345678"
-      },
-      "items": [
-        {
-          "productId": "PROD001",
-          "productName": "Maize Flour (2kg)",
-          "quantity": 5,
-          "price": 180
-        },
-        {
-          "productId": "PROD002",
-          "productName": "Cooking Oil (1L)",
-          "quantity": 2,
-          "price": 250
-        }
-      ],
-      "total": 1450,
-      "status": "Dispatched",
-      "orderDate": "2024-12-29T08:30:00+03:00",
-      "shippingAddress": {
-        "name": "Kenyatta Market",
-        "addressLine1": "Kenyatta Market",
-        "addressLine2": "Shop 15",
-        "city": "Nairobi",
-        "county": "Nairobi",
-        "postalCode": "00100",
-        "country": "Kenya"
-      },
-      "paymentMethod": "Mpesa",
-      "deliveryTime": "2024-12-29T14:00:00+03:00"
+  {
+    "id": 1,
+    "orderId": "ORD001",
+    "customer": {
+      "id": "CUST001",
+      "name": "Mwangi Wafula",
+      "email": "mwangiw@example.com",
+      "phone": "+254712345678"
     },
-    {
-      "id":2,
-      "orderId": "ORD002",
-      "customer": {
-        "id": "CUST002",
-        "name": "Achieng Otieno",
-        "email": "achiengo@example.com",
-        "phone": "+254723456789"
+    "items": [
+      {
+        "productId": "PROD001",
+        "productName": "Maize Flour (2kg)",
+        "quantity": 5,
+        "price": 180
       },
-      "items": [
-        {
-          "productId": "PROD003",
-          "productName": "Sugar (1kg)",
-          "quantity": 3,
-          "price": 160
-        },
-        {
-          "productId": "PROD004",
-          "productName": "Tea Leaves (500g)",
-          "quantity": 1,
-          "price": 300
-        }
-      ],
-      "total": 780,
-      "status": "Processing",
-      "orderDate": "2024-12-28T10:00:00+03:00",
-      "shippingAddress": {
-        "name": "Kisumu Mall",
-        "addressLine1": "Kisumu Mall",
-        "addressLine2": "",
-        "city": "Kisumu",
-        "county": "Kisumu",
-        "postalCode": "40100",
-        "country": "Kenya"
-      },
-      "paymentMethod": "Cash on Delivery",
-      "deliveryTime": "2024-12-29T12:00:00+03:00"
+      {
+        "productId": "PROD002",
+        "productName": "Cooking Oil (1L)",
+        "quantity": 2,
+        "price": 250
+      }
+    ],
+    "total": 1450,
+    "status": "Dispatched",
+    "orderDate": "2024-12-29T08:30:00+03:00",
+    "shippingAddress": {
+      "name": "Kenyatta Market",
+      "addressLine1": "Kenyatta Market",
+      "addressLine2": "Shop 150",
+      "city": "Nairobi",
+      "county": "Nairobi",
+      "postalCode": "00100",
+      "country": "Kenya",
+      "latitude": -1.3074322257410578,
+      "longitude": 36.801307396635785
     },
-    {
-      "id":3,
-      "orderId": "ORD003",
-      "customer": {
-        "id": "CUST003",
-        "name": "Wanjiku Kariuki",
-        "email": "wanjikuk@example.com",
-        "phone": "+254733456789"
+    "paymentMethod": "Mpesa",
+    "deliveryTime": "2024-12-29T14:00:00+03:00"
+  },
+  {
+    "id": 2,
+    "orderId": "ORD002",
+    "customer": {
+      "id": "CUST002",
+      "name": "Achieng Otieno",
+      "email": "achiengo@example.com",
+      "phone": "+254723456789"
+    },
+    "items": [
+      {
+        "productId": "PROD003",
+        "productName": "Sugar (1kg)",
+        "quantity": 3,
+        "price": 160
       },
-      "items": [
-        {
-          "productId": "PROD005",
-          "productName": "Rice (5kg)",
-          "quantity": 1,
-          "price": 600
-        },
-        {
-          "productId": "PROD006",
-          "productName": "Soap (1 Bar)",
-          "quantity": 4,
-          "price": 50
-        }
-      ],
-      "total": 800,
-      "status": "Delivered",
-      "orderDate": "2024-12-25T16:00:00+03:00",
-      "shippingAddress": {
-        "name": "Thika Supermarket",
-        "addressLine1": "Thika Supermarket",
-        "addressLine2": "Section B",
-        "city": "Thika",
-        "county": "Kiambu",
-        "postalCode": "01000",
-        "country": "Kenya"
+      {
+        "productId": "PROD004",
+        "productName": "Tea Leaves (500g)",
+        "quantity": 1,
+        "price": 300
+      }
+    ],
+    "total": 780,
+    "status": "Processing",
+    "orderDate": "2024-12-28T10:00:00+03:00",
+    "shippingAddress": {
+      "name": "Mahavir Mall",
+      "addressLine1": "Mahavir Mall",
+      "addressLine2": "",
+      "city": "Kisumu",
+      "county": "Kisumu",
+      "postalCode": "40100",
+      "country": "Kenya",
+      "latitude": -0.09847012522972234,
+      "longitude": 34.752115225465324
+    },
+    "paymentMethod": "Cash on Delivery",
+    "deliveryTime": "2024-12-29T12:00:00+03:00"
+  },
+  {
+    "id": 3,
+    "orderId": "ORD003",
+    "customer": {
+      "id": "CUST003",
+      "name": "Wanjiku Kariuki",
+      "email": "wanjikuk@example.com",
+      "phone": "+254733456789"
+    },
+    "items": [
+      {
+        "productId": "PROD005",
+        "productName": "Rice (5kg)",
+        "quantity": 1,
+        "price": 600
       },
-      "paymentMethod": "Mpesa",
-      "deliveryTime": "2024-12-26T09:00:00+03:00"
-    }
-  ]
-  
+      {
+        "productId": "PROD006",
+        "productName": "Soap (1 Bar)",
+        "quantity": 4,
+        "price": 50
+      }
+    ],
+    "total": 800,
+    "status": "Delivered",
+    "orderDate": "2024-12-25T16:00:00+03:00",
+    "shippingAddress": {
+      "name": "Mathais Supermarket, Thika",
+      "addressLine1": "Mathais Supermarket, Thika",
+      "addressLine2": "Section B",
+      "city": "Thika",
+      "county": "Kiambu",
+      "postalCode": "01000",
+      "country": "Kenya",
+      "latitude": -1.0356086031182399,
+      "longitude": 37.073278781290504
+    },
+    "paymentMethod": "Mpesa",
+    "deliveryTime": "2024-12-26T09:00:00+03:00"
+  }
+]

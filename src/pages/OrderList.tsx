@@ -18,6 +18,7 @@ import { useFormattedDateString } from "../hooks/DateHook";
 import { FilterFilled, SearchOutlined } from "@ant-design/icons";
 
 import get from "lodash/get";
+import { useNavigate } from "react-router-dom";
 
 // Breadcrumb items
 const breadCrumbItems = [
@@ -56,6 +57,8 @@ const OrdersTable: React.FC = () => {
   const [filteredData, setStatusFilter] = useState<any[]>(orders);
 
   const searchInput = useRef<any>(null);
+
+  const navigate = useNavigate();
 
   const handleSearch = (
     selectedKeys: any[],
@@ -306,7 +309,11 @@ const OrdersTable: React.FC = () => {
       render: (value: string) => (
         <>
           <Space size="middle" wrap>
-            <Button type="primary" icon={<i className="fa-solid fa-eye"></i>}>
+            <Button
+              type="primary"
+              icon={<i className="fa-solid fa-eye"></i>}
+              onClick={() => navigate(`/order/${value}`)}
+            >
               View order
             </Button>
 
