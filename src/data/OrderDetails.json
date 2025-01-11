@@ -1,0 +1,55 @@
+{
+    "orderId": "ORD123456789",
+    "orderDate": "2025-01-08T14:23:45Z",
+    "customerDetails": {
+      "customerId": "CUST001",
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "phone": "+254712345678",
+      "address": {
+        "street": "Moi Avenue",
+        "city": "Nairobi",
+        "county": "Nairobi",
+        "postalCode": "00100",
+        "country": "Kenya"
+      }
+    },
+    "orderItems": [
+      {
+        "productId": "PROD001",
+        "productName": "Maasai Shuka",
+        "quantity": 2,
+        "unitPrice": 1500.00,
+        "totalPrice": 3000.00
+      },
+      {
+        "productId": "PROD002",
+        "productName": "Kenyan Coffee (500g)",
+        "quantity": 1,
+        "unitPrice": 1200.00,
+        "totalPrice": 1200.00
+      }
+    ],
+    "paymentDetails": {
+      "paymentMethod": "M-Pesa",
+      "transactionId": "MPESA123456789",
+      "amountPaid": 4200.00,
+      "currency": "KES",
+      "paymentDate": "2025-01-08T14:30:00Z"
+    },
+    "shippingDetails": {
+      "shippingMethod": "Local Delivery",
+      "shippingFee": 200.00,
+      "deliveryAddress": {
+        "street": "Moi Avenue",
+        "city": "Nairobi",
+        "county": "Nairobi",
+        "postalCode": "00100",
+        "country": "Kenya"
+      },
+      "expectedDeliveryDate": "2025-01-09T17:00:00Z"
+    },
+    "orderStatus": "Processing",
+    "totalAmount": 4400.00
+  }
+  
