@@ -1,5 +1,7 @@
+import React from "react";
+
 export type CustomerDetailType = {
-  id?:number;
+  id?: number;
   customerId: string;
   name: string;
   email: string;
@@ -71,3 +73,10 @@ export type RoutingCoordinatesTypes = {
   origin: number[];
   destination: number[];
 };
+
+export interface FilterButtonProps {
+  label?: string;
+  type?: "primary" | "default" | "text" | "dashed";
+  onClick: () => void;
+  children: React.ReactNode;
+}

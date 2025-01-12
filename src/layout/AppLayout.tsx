@@ -1,4 +1,4 @@
-import { Flex, Layout } from "antd";
+import { ConfigProvider, Flex, Layout } from "antd";
 
 import AppNavbar from "./AppNavbar";
 import AppFooter from "./AppFooter";
@@ -13,7 +13,7 @@ const outletStyle: React.CSSProperties = {
   width: "95%",
   margin: "auto",
   minHeight: "87vh",
-  height:'100%',
+  height: "100%",
   // backgroundColor: "#D3D3D3",
 };
 
@@ -22,9 +22,20 @@ const AppLayout = () => {
     <Flex gap="middle" wrap>
       <Layout>
         <AppNavbar />
-        <Content style={outletStyle}>
-          <Outlet />
-        </Content>
+        <ConfigProvider
+          theme={{
+            components: {
+              Button: {
+                colorPrimary: "#FF3941",
+                // algorithm: true,
+              },
+            },
+          }}
+        >
+          <Content style={outletStyle}>
+            <Outlet />
+          </Content>
+        </ConfigProvider>
         <AppFooter />
       </Layout>
     </Flex>

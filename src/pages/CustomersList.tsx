@@ -115,7 +115,7 @@ const CustomersList = () => {
 
   const cancelDeactivate: PopconfirmProps["onCancel"] = (e) => {
     console.log(e);
-    message.error("User not deactivated");
+    message.error("Deactivation canceled");
   };
 
   return (

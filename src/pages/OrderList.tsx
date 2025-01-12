@@ -2,6 +2,7 @@ import {
   Badge,
   Breadcrumb,
   Button,
+  Dropdown,
   Flex,
   Input,
   message,
@@ -19,6 +20,7 @@ import { FilterFilled, SearchOutlined } from "@ant-design/icons";
 
 import get from "lodash/get";
 import { useNavigate } from "react-router-dom";
+import FilterButton from "../components/customComponents/FilterButton";
 
 // filter values
 
@@ -89,9 +91,7 @@ const OrdersTable: React.FC = () => {
     if (status === "all") {
       setStatusFilter(orders);
     } else {
-      setStatusFilter(
-        orders.filter((item: any) => item?.status === status)
-      );
+      setStatusFilter(orders.filter((item: any) => item?.status === status));
     }
   };
 
@@ -307,7 +307,7 @@ const OrdersTable: React.FC = () => {
       key: "orderId",
       render: (value: string) => (
         <>
-          <Space size="middle" wrap>
+          <Space size="large">
             <Button
               type="primary"
               icon={<i className="fa-solid fa-eye"></i>}
@@ -316,25 +316,57 @@ const OrdersTable: React.FC = () => {
               View order
             </Button>
 
-            <Popconfirm
-              title={<p>Delete order : {value}</p>}
-              description="Are you sure you want to delete this order?"
-              onConfirm={confirmDelete}
-              onCancel={cancelDelete}
-              okText="Delete"
-              cancelText="Cancel"
+            <Dropdown
+              trigger={["click"]}
+              menu={{
+                items: [
+                  {
+                    key: "action_button",
+                    label: (
+                      <Button
+                        type="text"
+                        icon={<i className="fa-solid fa-person-biking"></i>}
+                      >
+                        Dispatch
+                      </Button>
+                    ),
+                  },
+                  {
+                    key: "delete",
+                    label: (
+                      <Popconfirm
+                        title={<p>Delete order : {value}</p>}
+                        description="Are you sure you want to delete this order?"
+                        onConfirm={confirmDelete}
+                        onCancel={cancelDelete}
+                        okText="Delete"
+                        cancelText="Cancel"
+                      >
+                        <Button
+                          type="text"
+                          icon={<i className="fa-solid fa-trash"></i>}
+                          style={{ color: "red" }}
+                        >
+                          Delete
+                        </Button>
+                      </Popconfirm>
+                    ),
+                  },
+                ],
+              }}
             >
-              <Button
-                type="text"
-                icon={<i className="fa-solid fa-trash"></i>}
-                style={{ color: "red" }}
-              />
-            </Popconfirm>
+              <i
+                className="fa-solid fa-ellipsis-vertical"
+                style={{ cursor: "pointer" }}
+              ></i>
+            </Dropdown>
           </Space>
         </>
       ),
     },
   ];
+
+  // handle row actions
 
   const [activeButton, setActiveButton] = useState("all");
 
@@ -353,11 +385,24 @@ const OrdersTable: React.FC = () => {
     }
   }, []);
 
+  // get the number of orders for each status
+  const getOrdersByStatus = (status: string) =>
+    useMemo(() => {
+      if (status === "all") {
+        return orders.length;
+      } else {
+        const filteredOrders = orders?.filter(
+          (order: any) => order?.status === status
+        );
+        return filteredOrders.length;
+      }
+    }, [filteredData]);
+
   return (
     <>
       <Flex justify="space-between" align="center" gap="large">
         <Space wrap size="large" style={{ margin: "0.5em 0" }}>
-          <Button
+          <FilterButton
             type={activeButton === "all" ? "primary" : "dashed"}
             onClick={() => {
               filterByStatus("all");
@@ -365,8 +410,8 @@ const OrdersTable: React.FC = () => {
               localStorage.removeItem("active_order_status");
             }}
           >
-            All Orders
-          </Button>
+            All Orders ({getOrdersByStatus("all")})
+          </FilterButton>
           <Button
             type={activeButton === "Processing" ? "primary" : "dashed"}
             onClick={() => {
@@ -376,7 +421,7 @@ const OrdersTable: React.FC = () => {
             }}
           >
             <Badge status="processing" />
-            <p>Pending orders</p>
+            <p>Pending orders ({getOrdersByStatus("Processing")})</p>
           </Button>
           <Button
             type={activeButton === "Dispatched" ? "primary" : "dashed"}
@@ -387,7 +432,7 @@ const OrdersTable: React.FC = () => {
             }}
           >
             <Badge status="warning" />
-            <p>Dispatched orders</p>
+            <p>Dispatched orders ({getOrdersByStatus("Dispatched")})</p>
           </Button>
           <Button
             type={activeButton === "Delivered" ? "primary" : "dashed"}
@@ -398,7 +443,7 @@ const OrdersTable: React.FC = () => {
             }}
           >
             <Badge status="success" />
-            <p>Delivered orders</p>
+            <p>Delivered orders ({getOrdersByStatus("Delivered")})</p>
           </Button>
           <Button
             type={activeButton === "Canceled" ? "primary" : "dashed"}
@@ -409,7 +454,7 @@ const OrdersTable: React.FC = () => {
             }}
           >
             <Badge status="error" />
-            <p>Canceled orders (5)</p>
+            <p>Canceled orders ({getOrdersByStatus("Canceled")})</p>
           </Button>
         </Space>
 
