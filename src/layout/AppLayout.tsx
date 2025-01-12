@@ -12,7 +12,8 @@ const outletStyle: React.CSSProperties = {
   maxWidth: "100%",
   width: "95%",
   margin: "auto",
-  height: "87vh",
+  minHeight: "87vh",
+  height:'100%',
   // backgroundColor: "#D3D3D3",
 };
 

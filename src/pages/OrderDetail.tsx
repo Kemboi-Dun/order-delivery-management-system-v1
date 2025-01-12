@@ -16,13 +16,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import orderList from "../data/Orders.json";
 import pickUpStations from "../data/PickUpPoints.json";
 
+import OrderDetails from "../data/OrderDetails.json";
+
 import { useFormattedDateString } from "../hooks/DateHook";
 import LiveLocationMap from "../components/LiveLocationMap";
 
-const { Title } = Typography;
-interface OrderDetailsInterface {
-  orderDetail: any;
-}
+import {
+  AddressType,
+  CustomerCoordinates,
+  CustomerDetailType,
+  OrderDetailType,
+  OrderItemType,
+  PickUpStationType,
+} from "../types/Types";
 
 // style live map wrapper
 const livemapStyles: React.CSSProperties = {
@@ -35,19 +41,32 @@ const trackOrderMapStyles: React.CSSProperties = {
   height: "68vh",
 };
 
-interface orderItemInterface {
-  productId: string;
-  productName: string;
-  quantity: number;
-  price: number;
+const { Title } = Typography;
+
+interface OrderDetailsInterface {
+  orderDetail: OrderDetailType;
 }
+
+// interface orderItemInterface {
+//   productId: string;
+//   productName: string;
+//   quantity: number;
+//   unitPrice: number;
+//   totalPrice:number;
+// }
+
 // Order items tableOrderItems
 const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
-  const orderItems: orderItemInterface[] = orderDetail?.items
-    ? orderDetail?.items
-    : [];
+  const orderItems: OrderItemType[] = useMemo(() => {
+    return orderDetail?.orderItems.map((item: OrderItemType) => ({
+      ...item,
+      key: item.productId,
+    }));
+  }, [orderDetail]);
 
-  console.log("Order Items : --- ", orderDetail);
+  if (orderItems) {
+    console.log("Order Items : --- : +++ ", orderItems);
+  }
 
   // table columns
   const orderItemsColumns = [
@@ -67,10 +86,16 @@ const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
       dataIndex: "quantity",
     },
     {
-      title: "Price",
-      key: "price",
-      dataIndex: "price",
-      render:(value:number)=> <p>KES {value}</p>
+      title: "Unit Price",
+      key: "unitPrice",
+      dataIndex: "unitPrice",
+      render: (value: number) => <p>KES {value}</p>,
+    },
+    {
+      title: "Total Price",
+      key: "totalPrice",
+      dataIndex: "totalPrice",
+      render: (value: number) => <p>KES {value}</p>,
     },
   ];
 
@@ -84,9 +109,9 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
   const [openCustomerDrawer, setCustomerDrawer] = useState(false);
 
   const customerCoordinates = {
-    latitude: orderDetail?.shippingAddress?.latitude,
-    longitude: orderDetail?.shippingAddress?.longitude,
-    location: `${orderDetail?.shippingAddress?.name}, ${orderDetail?.shippingAddress?.county}`,
+    latitude: orderDetail?.customerDetails.address.latitude,
+    longitude: orderDetail?.customerDetails.address.longitude,
+    location: `${orderDetail?.customerDetails.address.name}, ${orderDetail?.customerDetails.address.county}`,
   };
 
   // open customer drawer:
@@ -109,7 +134,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
     },
     description: {
       orderId: orderDetail?.orderId,
-      status: orderDetail?.status,
+      status: orderDetail?.orderStatus,
     },
   };
   return (
@@ -123,7 +148,9 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
           |{" "}
           <p>
             <b>Expected Delivery date: </b>
-            {useFormattedDateString(orderDetail?.deliveryTime)}
+            {useFormattedDateString(
+              orderDetail?.deliveryDetails.expectedDeliveryDate
+            )}
           </p>
         </Space>
 
@@ -135,8 +162,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
           View customer info
         </Button>
         <MemoizedUserInfo
-          userDetails={orderDetail?.customer}
-          customerAddress={orderDetail?.shippingAddress}
+          userDetails={orderDetail?.customerDetails}
           onClose={closeCustomerDrawer}
           open={openCustomerDrawer}
           customerCoordinates={customerCoordinates}
@@ -164,7 +190,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
         />
 
         <p>
-          Total amount: <b> KES {orderDetail?.total}</b>
+          Total amount: <b> KES {orderDetail?.totalAmount}</b>
         </p>
       </Flex>
     </div>
@@ -173,26 +199,11 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
 
 // user info Drawer
 interface UserInfoType {
-  userDetails: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
+  userDetails: CustomerDetailType;
   customerCoordinates: {
     latitude: number;
     longitude: number;
     location: string;
-  };
-
-  customerAddress: {
-    name: string;
-    addressLine1: string;
-    addressLine2: string;
-    city: string;
-    county: string;
-    postalCode: string;
-    country: string;
   };
   onClose: () => void;
   open: boolean;
@@ -200,11 +211,13 @@ interface UserInfoType {
 
 const UserDetailDrawer: React.FC<UserInfoType> = ({
   userDetails,
-  customerAddress,
   customerCoordinates,
   open,
   onClose,
 }) => {
+  // flatten customer address
+  const customerAddress = userDetails?.address || null;
+
   return (
     <Drawer
       title="User info"
@@ -236,22 +249,19 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
             </p>
           </Flex>
         </Flex>
-        {/* <hr style={{width:'100%'}}/> */}
+
         <Divider />
         <Flex vertical gap="small">
           <Title level={5}>Address</Title>
           <Flex gap="middle" justify="space-between" align="center" wrap>
             <p>
-              <b>Name: </b> {customerAddress?.name}
+              <b>Name: </b> {customerAddress.name}
             </p>
             <p>
-              <b>Address 1: </b> {customerAddress?.addressLine1}
+              <b>Street: </b> {customerAddress.street}
             </p>
             <p>
-              <b>Address 2: </b> {customerAddress?.addressLine2}
-            </p>
-            <p>
-              <b>City: </b> {customerAddress?.city}
+              <b>Town: </b> {customerAddress?.town}
             </p>
             <p>
               <b>Postal Code: </b> {customerAddress?.postalCode}
@@ -276,24 +286,13 @@ interface TrackOrderModalInterface {
   openModal: boolean;
   closeModal: () => void;
   orderDetails: {
-    pickUpStationDetails: {
-      id: number;
-      name: string;
-      longitude: number;
-      latitude: number;
-      status: string;
-    };
-
+    pickUpStationDetails: PickUpStationType;
     description: {
       orderId: string;
       status: string;
     };
   };
-  customerCoordinates: {
-    longitude: number;
-    latitude: number;
-    location: string;
-  };
+  customerCoordinates: CustomerCoordinates;
 }
 
 // Track order Modal
@@ -303,18 +302,6 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
   openModal,
   closeModal,
 }) => {
-  // create origin and destinations for routing
-  //   const origin: [number, number] = [
-  //     orderDetails?.pickUpStationDetails?.latitude,
-  //     orderDetails?.pickUpStationDetails?.longitude,
-  //   ];
-  //   const destination: [number, number] = [
-  //     customerCoordinates?.latitude,
-  //     customerCoordinates?.longitude,
-  //   ];
-
-  //   const getDeliveryRoute = useGetOrderRoute({ origin, destination })
-
   return (
     <Modal
       title={
@@ -325,9 +312,6 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
 
               <Tag color="orange">{orderDetails?.description?.status}</Tag>
             </Space>
-            {/* <Button icon={<i className="fa-solid fa-route"></i>} type="primary">
-              Get Route
-            </Button> */}
           </Flex>
         </>
       }
@@ -357,6 +341,70 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
 
 const MemoizedTrackOrderModal = React.memo(TrackOrderModal);
 
+// Order detail section
+const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
+  const paymentDetails = orderDetail?.paymentDetails || null;
+  const deliveryDetails = orderDetail?.deliveryDetails || null;
+
+  return (
+    <Flex gap="middle" align="start"  style={{height:"100%", width:'100%'}}>
+      <OrderItems orderDetail={orderDetail} />
+
+      <div style={{width:'40%', height:'100%', overflowY:'auto'}}>
+
+      <Flex vertical gap="small">
+        <Title level={4}>Payment details</Title>
+        <p>
+          <b>Payment method:</b> {paymentDetails?.paymentMethod}
+        </p>
+        {paymentDetails?.transactionId && (
+          <p>
+            <b>Transaction ID:</b> {paymentDetails?.transactionId}
+          </p>
+        )}
+        <p>
+          <b>Amount paid:</b> {paymentDetails?.currency}{" "}
+          {paymentDetails?.amountPaid}
+        </p>
+        <p>
+          <b>Payment Date :</b>{" "}
+          {useFormattedDateString(paymentDetails?.paymentDate)}
+        </p>
+<Divider/>
+<Flex gap="large" align="center"  justify="space-between" >
+
+        <Title level={4}>Delivery details</Title>
+       
+        <p style={{textDecoration:"underline"}}>
+          <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
+        </p>
+</Flex>
+
+        <Flex gap="middle" justify="space-between" align="center" wrap>
+          <p>
+            <b>Name: </b> {deliveryDetails?.deliveryAddress.name}
+          </p>
+          <p>
+            <b>Street: </b> {deliveryDetails?.deliveryAddress.street}
+          </p>
+          <p>
+            <b>Town: </b> {deliveryDetails?.deliveryAddress?.town}
+          </p>
+          <p>
+            <b>Postal Code: </b> {deliveryDetails?.deliveryAddress?.postalCode}
+          </p>
+          <p>
+            <b>County: </b> {deliveryDetails?.deliveryAddress?.county},
+            {deliveryDetails?.deliveryAddress?.country}{" "}
+          </p>
+        </Flex>
+        
+      </Flex>
+      </div>
+    </Flex>
+  );
+};
+
 const OrderDetail = () => {
   const urlParams = useParams();
   const orderId = urlParams?.order_id;
@@ -372,11 +420,11 @@ const OrderDetail = () => {
   ];
 
   // get order from order list
-  const orderDetail = useMemo(() => {
-    return orderList.find((order) => order.orderId === orderId);
-  }, [orderId]);
+  // const orderDetail = useMemo(() => {
+  //   return orderList.find((order) => order.orderId === orderId);
+  // }, [orderId]);
 
-  console.log("PARENT ORDER DETAIL : ---- ", orderDetail);
+  console.log("ORDER DETAIL [RE-STRUCTURED] : ---- ", OrderDetails);
 
   return (
     <div style={{ padding: "1em" }}>
@@ -392,9 +440,9 @@ const OrderDetail = () => {
 
       <Title level={3}>Order ID: {orderId}</Title>
 
-      <OrderDetailSection orderDetail={orderDetail} />
+      <OrderDetailSection orderDetail={OrderDetails} />
 
-      <OrderItems orderDetail={orderDetail} />
+      <OrderInfoSection orderDetail={OrderDetails} />
     </div>
   );
 };

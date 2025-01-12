@@ -7,11 +7,14 @@ export type CustomerDetailType = {
 };
 
 export type AddressType = {
+  name: string;
   street: string;
-  city: string;
+  town: string;
   county: string;
   postalCode: string;
   country: string;
+  latitude: number;
+  longitude: number;
 };
 
 export type OrderItemType = {
@@ -20,19 +23,19 @@ export type OrderItemType = {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  key?: string;
 };
 
 export type PaymentDetailsType = {
   paymentMethod: string;
   transactionId?: string;
-  amountPaid: string;
-  currencey: string;
+  amountPaid: number;
+  currency: string;
   paymentDate: string;
 };
 
-export type ShippingDetailsType = {
-  shippingMethod: string;
-  shippingFee: string;
+export type DeliveryDetailsType = {
+  deliveryFee: number;
   deliveryAddress: AddressType;
   expectedDeliveryDate: string;
 };
@@ -43,7 +46,22 @@ export type OrderDetailType = {
   customerDetails: CustomerDetailType;
   orderItems: OrderItemType[];
   paymentDetails: PaymentDetailsType;
-  shippingDetails: ShippingDetailsType;
-  orderStatus: "Processing" | "Dispatched" | "Delivered" | "Canceled";
+  deliveryDetails: DeliveryDetailsType;
+  //   "Processing" | "Dispatched" | "Delivered" | "Canceled"
+  orderStatus: string;
   totalAmount: number;
+};
+
+export type PickUpStationType = {
+  id: number;
+  name: string;
+  longitude: number;
+  latitude: number;
+  status: string;
+};
+
+export type CustomerCoordinates = {
+  longitude: number;
+  latitude: number;
+  location: string;
 };
