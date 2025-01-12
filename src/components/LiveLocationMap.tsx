@@ -138,6 +138,34 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   const [openDirectionsDrawer, setOpenDirectionsDrawer] = useState(false);
   const [routingInfo, setRoutingInfo] = useState(null);
 
+  // manage popup buttons
+  const MarkerPopUpButton = () => {
+    if (!routingInfo) {
+      return (
+        <Button
+          icon={<i className="fa-solid fa-route"></i>}
+          type="primary"
+          onClick={() => getDeliveryRoute()}
+          style={{ margin: "1em 0" }}
+          size="small"
+        >
+          Get Route
+        </Button>
+      );
+    } else if (routingInfo && !openDirectionsDrawer) {
+      return (
+        <Button
+          icon={<i className="fa-solid fa-eye"></i>}
+          type="dashed"
+          size="small"
+          onClick={() => setOpenDirectionsDrawer(true)}
+        >
+          View routes
+        </Button>
+      );
+    }
+  };
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       <Map
@@ -214,16 +242,8 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
                   <p>
                     Order ID: <b>{orderDetails?.description?.orderId}</b>
                   </p>
-                  <Button
-                    icon={<i className="fa-solid fa-route"></i>}
-                    type="primary"
-                    onClick={() => getDeliveryRoute()}
-                    style={{ margin: "1em 0" }}
-                    size="small"
-                  >
-                    Get Route
-                  </Button>
-                
+
+                  <MarkerPopUpButton />
                 </Flex>
               </Popup>
             )}
