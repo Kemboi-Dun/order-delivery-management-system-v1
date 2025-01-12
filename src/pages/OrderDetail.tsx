@@ -7,6 +7,7 @@ import {
   Flex,
   Modal,
   Space,
+  Table,
   Tag,
   Typography,
 } from "antd";
@@ -17,7 +18,6 @@ import pickUpStations from "../data/PickUpPoints.json";
 
 import { useFormattedDateString } from "../hooks/DateHook";
 import LiveLocationMap from "../components/LiveLocationMap";
-
 
 const { Title } = Typography;
 interface OrderDetailsInterface {
@@ -33,6 +33,48 @@ const livemapStyles: React.CSSProperties = {
 const trackOrderMapStyles: React.CSSProperties = {
   width: "100%",
   height: "68vh",
+};
+
+interface orderItemInterface {
+  productId: string;
+  productName: string;
+  quantity: number;
+  price: number;
+}
+// Order items tableOrderItems
+const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
+  const orderItems: orderItemInterface[] = orderDetail?.items
+    ? orderDetail?.items
+    : [];
+
+  console.log("Order Items : --- ", orderDetail);
+
+  // table columns
+  const orderItemsColumns = [
+    {
+      title: "Product ID",
+      key: "productId",
+      dataIndex: "productId",
+    },
+    {
+      title: "Product Name",
+      key: "productName",
+      dataIndex: "productName",
+    },
+    {
+      title: "Quantity",
+      key: "quantity",
+      dataIndex: "quantity",
+    },
+    {
+      title: "Price",
+      key: "price",
+      dataIndex: "price",
+      render:(value:number)=> <p>KES {value}</p>
+    },
+  ];
+
+  return <Table columns={orderItemsColumns} dataSource={orderItems} />;
 };
 
 const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
@@ -302,16 +344,13 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
         xl: "80%",
         xxl: "40%",
       }}
-   
     >
       <div style={trackOrderMapStyles}>
-
         <LiveLocationMap
           customerCoordinates={customerCoordinates}
           orderDetails={orderDetails}
         />
       </div>
-    
     </Modal>
   );
 };
@@ -337,6 +376,8 @@ const OrderDetail = () => {
     return orderList.find((order) => order.orderId === orderId);
   }, [orderId]);
 
+  console.log("PARENT ORDER DETAIL : ---- ", orderDetail);
+
   return (
     <div style={{ padding: "1em" }}>
       <Breadcrumb items={orderDetailBreadcrumbItems} />
@@ -352,6 +393,8 @@ const OrderDetail = () => {
       <Title level={3}>Order ID: {orderId}</Title>
 
       <OrderDetailSection orderDetail={orderDetail} />
+
+      <OrderItems orderDetail={orderDetail} />
     </div>
   );
 };

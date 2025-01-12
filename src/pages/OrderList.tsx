@@ -11,7 +11,7 @@ import {
   Table,
   Typography,
 } from "antd";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import orderList from "../data/Orders.json";
 import { useFormattedDateString } from "../hooks/DateHook";
@@ -41,15 +41,29 @@ const OrdersTable: React.FC = () => {
     total?: string[];
     paymentMethod?: string[];
     shippingAddress?: string[];
+    // key?: string;
   }
+
+  // Add key to order list
+  const formattedOrders = useMemo(() => {
+    return orders?.map((order: FilteredInfo) => ({
+      ...order,
+      key: order?.orderId,
+    }));
+  }, [orders]);
 
   const [filteredInfo, setFilteredInfo] = useState<FilteredInfo>({});
 
-  const [filteredData, setStatusFilter] = useState<any[]>(orders);
+  const [filteredData, setStatusFilter] =
+    useState<FilteredInfo[]>(formattedOrders);
 
   const searchInput = useRef<any>(null);
 
   const navigate = useNavigate();
+
+  if (filteredData) {
+    console.log("FILTERED DATA----------", filteredData);
+  }
 
   const handleSearch = (
     selectedKeys: any[],
@@ -77,11 +91,12 @@ const OrdersTable: React.FC = () => {
     setStatusFilter(statusList);
   };
 
-  const filterByStatus = (status: any) => {
+  // Handle filtering by status outside the table
+  const filterByStatus = (status: string) => {
     if (status === "all") {
-      setStatusFilter(orders);
+      setStatusFilter(formattedOrders);
     } else {
-      setStatusFilter(orders.filter((item: any) => item.status === status));
+      setStatusFilter(formattedOrders.filter((item: any) => item?.status === status));
     }
   };
 
@@ -340,7 +355,7 @@ const OrdersTable: React.FC = () => {
       setActiveButton(activeFilterStatus);
       filterByStatus(activeFilterStatus);
     } else {
-      setStatusFilter(orders);
+      setStatusFilter(formattedOrders);
       setActiveButton("all");
     }
   }, []);
@@ -349,11 +364,6 @@ const OrdersTable: React.FC = () => {
     <>
       <Flex justify="space-between" align="center" gap="large">
         <Space wrap size="large" style={{ margin: "0.5em 0" }}>
-          {/* <Input
-            type="search"
-            placeholder="Search order"
-            suffix={<i className="fa-solid fa-magnifying-glass"></i>}
-          /> */}
           <Button
             type={activeButton === "all" ? "primary" : "dashed"}
             onClick={() => {
