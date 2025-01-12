@@ -1,6 +1,18 @@
-import { Breadcrumb, Button, Flex, Space, Table, Tag } from "antd";
-import React from "react";
+import {
+  Breadcrumb,
+  Button,
+  Flex,
+  message,
+  Popconfirm,
+  PopconfirmProps,
+  Space,
+  Table,
+  Tag,
+} from "antd";
+import React, { useState } from "react";
 import CustomerListData from "../data/CustomerList.json";
+import CustomerInfoDrawer from "../components/CustomerInfoDrawer";
+import { statusColorTag } from "../utils/HelperFunctions";
 
 // customer data
 // const customerData = ;
@@ -41,7 +53,7 @@ const CustomersList = () => {
         return lastOrder ? (
           <>
             <p>Order ID: {lastOrder?.orderId}</p>
-            <Tag color={orderStatusTag(lastOrder?.status)}>
+            <Tag color={statusColorTag(lastOrder?.status)}>
               {lastOrder?.status}
             </Tag>
             <p>Amount: KES {lastOrder?.amount}</p>
@@ -57,51 +69,68 @@ const CustomersList = () => {
       // title:"Actions",
       key: "id",
       dataIndex: "id",
-      render: (value: number) => (
-        <Flex gap="small" vertical>
-          <Button
-            type="primary"
-            icon={<i className="fa-regular fa-id-card"></i>}
-          >
-            View Info
-          </Button>
-          <Button
-            icon={<i className="fa-solid fa-user-slash"></i>}
-            type="dashed"
-          >
-            Deactivate
-          </Button>
-        </Flex>
+      render: (value: number, record: any) => (
+        <>
+          <Flex gap="small" vertical>
+            <Button
+              type="primary"
+              icon={<i className="fa-regular fa-id-card"></i>}
+              onClick={() => {
+                setActiveUserId(value);
+                setOpenInfoDrawer(true);
+              }}
+            >
+              View Info
+            </Button>
+            <Popconfirm
+              title={<p>Deactivate: {record?.name}</p>}
+              description="Are you sure you want to deactivate this customer?"
+              onConfirm={confirmDeactivate}
+              onCancel={cancelDeactivate}
+              okText="Deactivate"
+              cancelText="Cancel"
+            >
+              <Button
+                icon={<i className="fa-solid fa-user-slash"></i>}
+                type="dashed"
+              >
+                Deactivate
+              </Button>
+            </Popconfirm>
+          </Flex>
+        </>
       ),
     },
   ];
-  // handle order status tag color
-  const orderStatusTag = (status: string) => {
-    switch (status) {
-      case "Dispatched":
-        return "volcano";
-        break;
-      case "Pending":
-        return "purple";
-        break;
-      case "Cancelled":
-        return "red";
-        break;
-      case "Delivered":
-        return "green";
-        break;
-      default:
-        return "default";
-        break;
-    }
+
+  // View customer info
+  const [openInfoDrawer, setOpenInfoDrawer] = useState(false);
+  const [activeUserId, setActiveUserId] = useState<number | any>();
+
+  //handle deactivate
+  const confirmDeactivate: PopconfirmProps["onConfirm"] = (e) => {
+    console.log(e);
+    message.success("User deactivated");
+  };
+
+  const cancelDeactivate: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    message.error("User not deactivated");
   };
 
   return (
-    <Table
-      dataSource={CustomerListData}
-      columns={customerTableColumns}
-      rowKey="id"
-    />
+    <>
+      <Table
+        dataSource={CustomerListData}
+        columns={customerTableColumns}
+        rowKey="id"
+      />
+      <CustomerInfoDrawer
+        customerID={activeUserId}
+        openInfoDrawer={openInfoDrawer}
+        onCloseInfoDrawer={() => setOpenInfoDrawer(false)}
+      />
+    </>
   );
 };
 

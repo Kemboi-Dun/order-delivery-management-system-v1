@@ -1,4 +1,5 @@
 export type CustomerDetailType = {
+  id?:number;
   customerId: string;
   name: string;
   email: string;

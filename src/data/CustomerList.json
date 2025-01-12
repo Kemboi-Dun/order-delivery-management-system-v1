@@ -17,13 +17,13 @@
                 "orderId": "ORD12345",
                 "status": "Delivered",
                 "amount": 3500,
-                "date": "2024-12-28"
+                "date": "2024-12-28T14:00:00+03:00"
             },
             {
                 "orderId": "ORD12346",
-                "status": "Pending",
+                "status": "Processing",
                 "amount": 1200,
-                "date": "2024-12-29"
+                "date": "2024-12-29T14:00:00+03:00"
             }
         ]
     },
@@ -45,7 +45,7 @@
                 "orderId": "ORD22345",
                 "status": "Dispatched",
                 "amount": 4500,
-                "date": "2024-12-26"
+                "date": "2024-12-26T14:00:00+03:00"
             }
         ]
     },
@@ -67,13 +67,13 @@
                 "orderId": "ORD32345",
                 "status": "Cancelled",
                 "amount": 800,
-                "date": "2024-12-27"
+                "date": "2024-12-27T14:00:00+03:00"
             },
             {
                 "orderId": "ORD32346",
                 "status": "Delivered",
                 "amount": 2000,
-                "date": "2024-12-25"
+                "date": "2024-12-25T14:00:00+03:00"
             }
         ]
     },
@@ -93,9 +93,9 @@
         "orders": [
             {
                 "orderId": "ORD42345",
-                "status": "Pending",
+                "status": "Processing",
                 "amount": 1000,
-                "date": "2024-12-28"
+                "date": "2024-12-28T14:00:00+03:00"
             }
         ]
     }

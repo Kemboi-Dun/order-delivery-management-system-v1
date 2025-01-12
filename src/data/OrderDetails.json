@@ -2,6 +2,7 @@
   "orderId": "ORD123456789",
   "orderDate": "2025-01-08T14:23:45Z",
   "customerDetails": {
+    "id": 1,
     "customerId": "CUST001",
     "name": "John Doe",
     "email": "johndoe@example.com",

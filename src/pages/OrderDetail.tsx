@@ -29,6 +29,8 @@ import {
   OrderItemType,
   PickUpStationType,
 } from "../types/Types";
+import CustomerInfoDrawer from "../components/CustomerInfoDrawer";
+import { statusColorTag } from "../utils/HelperFunctions";
 
 // style live map wrapper
 const livemapStyles: React.CSSProperties = {
@@ -221,66 +223,77 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
 }) => {
   // flatten customer address
   const customerAddress = userDetails?.address || null;
+  const [openInfoDrawer, setOpenInfoDrawer] = useState(false);
+  const activeUserId = userDetails?.id || 2;
 
   return (
-    <Drawer
-      title="User info"
-      open={open}
-      onClose={onClose}
-      extra={
-        <Button
-          icon={<i className="fa-regular fa-address-card"></i>}
-          type="primary"
-        >
-          View Detailed Info
-        </Button>
-      }
-      closable={false}
-      width={640}
-    >
-      <Flex gap="middle" justify="start" align="start" vertical>
-        <Flex gap="small" vertical>
-          <Title level={5}>User profile</Title>
-          <Flex gap="middle" justify="space-between" align="center" wrap>
-            <p>
-              <b>Full name: </b> {userDetails?.name}
-            </p>
-            <p>
-              <b>Email: </b> {userDetails?.email}
-            </p>
-            <p>
-              <b>Phone number: </b> {userDetails?.phone}
-            </p>
+    <>
+      <Drawer
+        title="User info"
+        open={open}
+        onClose={onClose}
+        extra={
+          <Button
+            icon={<i className="fa-regular fa-address-card"></i>}
+            type="primary"
+            onClick={() => setOpenInfoDrawer(true)}
+          >
+            View Detailed Info
+          </Button>
+        }
+        // closable={false}
+        width={640}
+        destroyOnClose
+      >
+        <Flex gap="middle" justify="start" align="start" vertical>
+          <Flex gap="small" vertical>
+            <Title level={5}>User profile</Title>
+            <Flex gap="middle" justify="space-between" align="center" wrap>
+              <p>
+                <b>Full name: </b> {userDetails?.name}
+              </p>
+              <p>
+                <b>Email: </b> {userDetails?.email}
+              </p>
+              <p>
+                <b>Phone number: </b> {userDetails?.phone}
+              </p>
+            </Flex>
           </Flex>
-        </Flex>
 
-        <Divider />
-        <Flex vertical gap="small">
-          <Title level={5}>Address</Title>
-          <Flex gap="middle" justify="space-between" align="center" wrap>
-            <p>
-              <b>Name: </b> {customerAddress.name}
-            </p>
-            <p>
-              <b>Street: </b> {customerAddress.street}
-            </p>
-            <p>
-              <b>Town: </b> {customerAddress?.town}
-            </p>
-            <p>
-              <b>Postal Code: </b> {customerAddress?.postalCode}
-            </p>
-            <p>
-              <b>County: </b> {customerAddress?.county},
-              {customerAddress?.country}{" "}
-            </p>
+          <Divider />
+          <Flex vertical gap="small">
+            <Title level={5}>Address</Title>
+            <Flex gap="middle" justify="space-between" align="center" wrap>
+              <p>
+                <b>Name: </b> {customerAddress.name}
+              </p>
+              <p>
+                <b>Street: </b> {customerAddress.street}
+              </p>
+              <p>
+                <b>Town: </b> {customerAddress?.town}
+              </p>
+              <p>
+                <b>Postal Code: </b> {customerAddress?.postalCode}
+              </p>
+              <p>
+                <b>County: </b> {customerAddress?.county},
+                {customerAddress?.country}{" "}
+              </p>
+            </Flex>
           </Flex>
+          <div style={livemapStyles}>
+            <LiveLocationMap customerCoordinates={customerCoordinates} />
+          </div>
         </Flex>
-        <div style={livemapStyles}>
-          <LiveLocationMap customerCoordinates={customerCoordinates} />
-        </div>
-      </Flex>
-    </Drawer>
+      </Drawer>
+      <CustomerInfoDrawer
+        customerID={activeUserId}
+        openInfoDrawer={openInfoDrawer}
+        onCloseInfoDrawer={() => setOpenInfoDrawer(false)}
+      />
+    </>
   );
 };
 
@@ -433,14 +446,19 @@ const OrderDetail = () => {
       <Breadcrumb items={orderDetailBreadcrumbItems} />
       <Button
         type="dashed"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/")}
         icon={<i className="fa-solid fa-arrow-left"></i>}
         style={{ margin: "1em 0" }}
       >
         Back
       </Button>
+      <Flex align="center" gap="large">
+        <h1>Order ID: {orderId}</h1>
 
-      <Title level={3}>Order ID: {orderId}</Title>
+        <Tag color={statusColorTag(OrderDetails?.orderStatus)}>
+          {OrderDetails?.orderStatus}
+        </Tag>
+      </Flex>
 
       <OrderDetailSection orderDetail={OrderDetails} />
 
