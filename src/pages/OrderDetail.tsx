@@ -84,17 +84,20 @@ const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
       title: "Quantity",
       key: "quantity",
       dataIndex: "quantity",
+      sorter: (a: any, b: any) => a.quantity - b.quantity,
     },
     {
       title: "Unit Price",
       key: "unitPrice",
       dataIndex: "unitPrice",
+      sorter: (a: any, b: any) => a.unitPrice - b.unitPrice,
       render: (value: number) => <p>KES {value}</p>,
     },
     {
       title: "Total Price",
       key: "totalPrice",
       dataIndex: "totalPrice",
+      sorter: (a: any, b: any) => a.totalPrice - b.totalPrice,
       render: (value: number) => <p>KES {value}</p>,
     },
   ];
@@ -347,59 +350,57 @@ const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
   const deliveryDetails = orderDetail?.deliveryDetails || null;
 
   return (
-    <Flex gap="middle" align="start"  style={{height:"100%", width:'100%'}}>
+    <Flex gap="middle" align="start" style={{ height: "100%", width: "100%" }}>
       <OrderItems orderDetail={orderDetail} />
 
-      <div style={{width:'40%', height:'100%', overflowY:'auto'}}>
+      <div style={{ width: "40%", height: "100%", overflowY: "auto" }}>
+        <Flex vertical gap="small">
+          <Title level={4}>Payment details</Title>
+          <p>
+            <b>Payment method:</b> {paymentDetails?.paymentMethod}
+          </p>
+          {paymentDetails?.transactionId && (
+            <p>
+              <b>Transaction ID:</b> {paymentDetails?.transactionId}
+            </p>
+          )}
+          <p>
+            <b>Amount paid:</b> {paymentDetails?.currency}{" "}
+            {paymentDetails?.amountPaid}
+          </p>
+          <p>
+            <b>Payment Date :</b>{" "}
+            {useFormattedDateString(paymentDetails?.paymentDate)}
+          </p>
+          <Divider />
+          <Flex gap="large" align="center" justify="space-between">
+            <Title level={4}>Delivery details</Title>
 
-      <Flex vertical gap="small">
-        <Title level={4}>Payment details</Title>
-        <p>
-          <b>Payment method:</b> {paymentDetails?.paymentMethod}
-        </p>
-        {paymentDetails?.transactionId && (
-          <p>
-            <b>Transaction ID:</b> {paymentDetails?.transactionId}
-          </p>
-        )}
-        <p>
-          <b>Amount paid:</b> {paymentDetails?.currency}{" "}
-          {paymentDetails?.amountPaid}
-        </p>
-        <p>
-          <b>Payment Date :</b>{" "}
-          {useFormattedDateString(paymentDetails?.paymentDate)}
-        </p>
-<Divider/>
-<Flex gap="large" align="center"  justify="space-between" >
+            <p style={{ textDecoration: "underline" }}>
+              <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
+            </p>
+          </Flex>
 
-        <Title level={4}>Delivery details</Title>
-       
-        <p style={{textDecoration:"underline"}}>
-          <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
-        </p>
-</Flex>
-
-        <Flex gap="middle" justify="space-between" align="center" wrap>
-          <p>
-            <b>Name: </b> {deliveryDetails?.deliveryAddress.name}
-          </p>
-          <p>
-            <b>Street: </b> {deliveryDetails?.deliveryAddress.street}
-          </p>
-          <p>
-            <b>Town: </b> {deliveryDetails?.deliveryAddress?.town}
-          </p>
-          <p>
-            <b>Postal Code: </b> {deliveryDetails?.deliveryAddress?.postalCode}
-          </p>
-          <p>
-            <b>County: </b> {deliveryDetails?.deliveryAddress?.county},
-            {deliveryDetails?.deliveryAddress?.country}{" "}
-          </p>
+          <Flex gap="middle" justify="space-between" align="center" wrap>
+            <p>
+              <b>Name: </b> {deliveryDetails?.deliveryAddress.name}
+            </p>
+            <p>
+              <b>Street: </b> {deliveryDetails?.deliveryAddress.street}
+            </p>
+            <p>
+              <b>Town: </b> {deliveryDetails?.deliveryAddress?.town}
+            </p>
+            <p>
+              <b>Postal Code: </b>{" "}
+              {deliveryDetails?.deliveryAddress?.postalCode}
+            </p>
+            <p>
+              <b>County: </b> {deliveryDetails?.deliveryAddress?.county},
+              {deliveryDetails?.deliveryAddress?.country}{" "}
+            </p>
+          </Flex>
         </Flex>
-        
-      </Flex>
       </div>
     </Flex>
   );
