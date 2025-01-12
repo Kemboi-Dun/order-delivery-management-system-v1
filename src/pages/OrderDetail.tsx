@@ -86,6 +86,7 @@ const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
       dataIndex: "quantity",
       sorter: (a: any, b: any) => a.quantity - b.quantity,
     },
+
     {
       title: "Unit Price",
       key: "unitPrice",

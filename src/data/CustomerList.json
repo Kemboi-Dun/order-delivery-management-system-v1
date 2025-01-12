@@ -1,0 +1,102 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "phone": "+254701234567",
+        "location": {
+            "town": "Nairobi",
+            "area": "Westlands",
+            "coordinates": {
+                "latitude": -1.267576,
+                "longitude": 36.803657
+            }
+        },
+        "orders": [
+            {
+                "orderId": "ORD12345",
+                "status": "Delivered",
+                "amount": 3500,
+                "date": "2024-12-28"
+            },
+            {
+                "orderId": "ORD12346",
+                "status": "Pending",
+                "amount": 1200,
+                "date": "2024-12-29"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "phone": "+254798765432",
+        "location": {
+            "town": "Nairobi",
+            "area": "Kilimani",
+            "coordinates": {
+                "latitude": -1.292059,
+                "longitude": 36.787292
+            }
+        },
+        "orders": [
+            {
+                "orderId": "ORD22345",
+                "status": "Dispatched",
+                "amount": 4500,
+                "date": "2024-12-26"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Peter Mwangi",
+        "email": "peter@example.com",
+        "phone": "+254711112233",
+        "location": {
+            "town": "Nairobi",
+            "area": "CBD",
+            "coordinates": {
+                "latitude": -1.28333,
+                "longitude": 36.81667
+            }
+        },
+        "orders": [
+            {
+                "orderId": "ORD32345",
+                "status": "Cancelled",
+                "amount": 800,
+                "date": "2024-12-27"
+            },
+            {
+                "orderId": "ORD32346",
+                "status": "Delivered",
+                "amount": 2000,
+                "date": "2024-12-25"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Alice Otieno",
+        "email": "alice@example.com",
+        "phone": "+254722334455",
+        "location": {
+            "town": "Nairobi",
+            "area": "Lang'ata",
+            "coordinates": {
+                "latitude": -1.347188,
+                "longitude": 36.720917
+            }
+        },
+        "orders": [
+            {
+                "orderId": "ORD42345",
+                "status": "Pending",
+                "amount": 1000,
+                "date": "2024-12-28"
+            }
+        ]
+    }
+]

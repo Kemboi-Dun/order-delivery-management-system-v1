@@ -45,17 +45,10 @@ const OrdersTable: React.FC = () => {
   }
 
   // Add key to order list
-  const formattedOrders = useMemo(() => {
-    return orders?.map((order: FilteredInfo) => ({
-      ...order,
-      key: order?.orderId,
-    }));
-  }, [orders]);
 
   const [filteredInfo, setFilteredInfo] = useState<FilteredInfo>({});
 
-  const [filteredData, setStatusFilter] =
-    useState<FilteredInfo[]>(formattedOrders);
+  const [filteredData, setStatusFilter] = useState<FilteredInfo[]>(orders);
 
   const searchInput = useRef<any>(null);
 
@@ -94,9 +87,11 @@ const OrdersTable: React.FC = () => {
   // Handle filtering by status outside the table
   const filterByStatus = (status: string) => {
     if (status === "all") {
-      setStatusFilter(formattedOrders);
+      setStatusFilter(orders);
     } else {
-      setStatusFilter(formattedOrders.filter((item: any) => item?.status === status));
+      setStatusFilter(
+        orders.filter((item: any) => item?.status === status)
+      );
     }
   };
 
@@ -208,10 +203,9 @@ const OrdersTable: React.FC = () => {
     },
     {
       title: "Customer",
-      dataIndex: "customer",
-      key: "customer",
+      dataIndex: ["customer", "name"],
+      key: "name",
       filteredValue: filteredInfo?.customer || null,
-      render: (value: any) => <p>{value?.name}</p>,
       ...getColumnSearchProps("customer.name"),
     },
     {
@@ -302,9 +296,8 @@ const OrdersTable: React.FC = () => {
     },
     {
       title: "Shipping Address",
-      dataIndex: "shippingAddress",
-      key: "shippingAddress",
-      render: (value: any) => <p>{value?.name}</p>,
+      dataIndex: ["shippingAddress", "name"],
+      key: "name",
       filteredValue: filteredInfo?.shippingAddress || null,
       ...getColumnSearchProps("shippingAddress.name"),
     },
@@ -355,7 +348,7 @@ const OrdersTable: React.FC = () => {
       setActiveButton(activeFilterStatus);
       filterByStatus(activeFilterStatus);
     } else {
-      setStatusFilter(formattedOrders);
+      setStatusFilter(orders);
       setActiveButton("all");
     }
   }, []);
@@ -433,6 +426,7 @@ const OrdersTable: React.FC = () => {
         dataSource={filteredData}
         style={ordersTableStyle}
         onChange={handleChange}
+        rowKey="orderId"
       />
     </>
   );
