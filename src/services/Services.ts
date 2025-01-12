@@ -1,15 +1,13 @@
 import axios from "axios";
 import { MAPBOX_ACCESS_TOKEN } from "../utils/Constants";
+import { RoutingCoordinatesTypes } from "../types/Types";
 
 const OrdersService = {
-  async getDeliveryRoute(origin: number[], destination: number[]) {
-    const testDestination = [-1.2812574587130487, 36.83180403936404];
-    const testOrigin = [-1.3565952, 36.7394816];
-
+  async getDeliveryRoute(routingCoordinates: RoutingCoordinatesTypes) {
     // Mapbox directions API
-    const directions_URI = `https://api.mapbox.com/directions/v5/mapbox/driving-traffic/${testOrigin.join(
+    const directions_URI = `https://api.mapbox.com/directions/v5/mapbox/driving-traffic/${routingCoordinates.origin.join(
       ","
-    )}; ${testDestination.join(
+    )}; ${routingCoordinates.destination.join(
       ","
     )}?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
 
@@ -20,9 +18,6 @@ const OrdersService = {
           "ROUTE COULD NOT BE FETCHED -- [SERVER RETURNED EMPTY DATA]"
         );
       }
-
-      console.log("TEST ORIGIN: _+++++ ", testOrigin);
-      console.log("TEST DESTINATION __ ++++ ", testDestination);
 
       return response.data;
     } catch (error: any) {

@@ -65,3 +65,8 @@ export type CustomerCoordinates = {
   latitude: number;
   location: string;
 };
+
+export type RoutingCoordinatesTypes = {
+  origin: number[];
+  destination: number[];
+};

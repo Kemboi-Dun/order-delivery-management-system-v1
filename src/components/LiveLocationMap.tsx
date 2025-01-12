@@ -9,6 +9,8 @@ import Map, {
 } from "react-map-gl";
 import { Badge, Button, Flex, Space, Tooltip } from "antd";
 import OrdersService from "../services/Services";
+import DirectionsDrawer from "./DirectionsDrawer";
+import { RoutingCoordinatesTypes } from "../types/Types";
 
 interface LiveLocationMapInterface {
   customerCoordinates: {
@@ -58,31 +60,41 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   const [pickUpLocationPopUp, setPickUpLocationPopUp] = useState(true);
 
   // manage route state
-  const [deliveryRoute, setDeliveryRoute] = useState(null);
+  const [deliveryRoute, setDeliveryRoute] = useState<
+    { type: string; coordinates: number[] } | any
+  >(null);
 
   // get routes
   // create origin and destinations for routing
-  const origin: any[] = [
-    orderDetails?.pickUpStationDetails?.latitude,
-    orderDetails?.pickUpStationDetails?.longitude,
-  ];
-  const destination: number[] = [
-    customerCoordinates?.latitude,
-    customerCoordinates?.longitude,
-  ];
+  // const origin: any[] = [
+  //   orderDetails?.pickUpStationDetails?.latitude,
+  //   orderDetails?.pickUpStationDetails?.longitude,
+  // ];
+  // const destination: number[] = [
+  //   customerCoordinates?.latitude,
+  //   customerCoordinates?.longitude,
+  // ];
 
   // get delivery route
-
+  const routingCoordinates: RoutingCoordinatesTypes | any = {
+    origin: [
+      orderDetails?.pickUpStationDetails?.longitude,
+      orderDetails?.pickUpStationDetails?.latitude,
+    ],
+    destination: [
+      customerCoordinates?.longitude,
+      customerCoordinates?.latitude,
+    ],
+  };
   const getDeliveryRoute = useCallback(async () => {
     try {
-      const response = await OrdersService.getDeliveryRoute(
-        origin,
-        destination
-      );
+      const response = await OrdersService.getDeliveryRoute(routingCoordinates);
 
       if (response?.routes?.length) {
         console.log("RESPONSE --- ", response?.routes[0]?.geometry);
         setDeliveryRoute(response?.routes[0]?.geometry);
+        setRoutingInfo(response);
+        setOpenDirectionsDrawer(true);
       } else {
         console.log("Routes not found");
       }
@@ -90,12 +102,12 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
       console.log("Error getting routes: ---- ", error);
       throw error;
     }
-  }, [origin, destination]);
+  }, [routingCoordinates]);
 
   // route source and layer
 
   const deliveryRouteData = useMemo(() => {
-    if (!deliveryRoute) return null;
+    if (!deliveryRoute || deliveryRoute?.type !== "LineString") return null;
     return {
       type: "FeatureCollection",
       features: [
@@ -121,6 +133,10 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
       }));
     }
   }, [orderDetails, customerCoordinates]);
+
+  // manage directions drawer
+  const [openDirectionsDrawer, setOpenDirectionsDrawer] = useState(false);
+  const [routingInfo, setRoutingInfo] = useState(null);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -207,9 +223,7 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
                   >
                     Get Route
                   </Button>
-                  {deliveryRoute && (
-                    <p>Route active {deliveryRoute?.coordinates.length}</p>
-                  )}
+                
                 </Flex>
               </Popup>
             )}
@@ -228,6 +242,12 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
                 }}
               />
             </Source>
+
+            <DirectionsDrawer
+              routingInfo={routingInfo}
+              openDirectionsDrawer={openDirectionsDrawer}
+              setOpenDirectionsDrawer={setOpenDirectionsDrawer}
+            />
           </>
         )}
       </Map>
