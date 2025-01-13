@@ -4,6 +4,11 @@ import OrdersService from "../services/Services";
 
 interface UserListContextProps {
   users: UserInfoTypes[];
+  openUserInfo: boolean;
+  setOpenUserInfo: (state: boolean) => void;
+  userDetail: UserInfoTypes | undefined;
+  setUserID: (userId: string | number) => void;
+  userID: number | string;
 }
 
 // create userlist context
@@ -19,6 +24,12 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
   children,
 }) => {
   const [users, setUsers] = useState<UserInfoTypes[]>([]);
+
+  const [openUserInfo, setOpenUserInfo] = useState(false);
+  const [userID, setUserID] = useState<number | string>("");
+  const [userDetail, setUserDetail] = useState<UserInfoTypes | undefined>(
+    undefined
+  );
 
   // fetch and store users
   const fetchUserListData = async () => {
@@ -36,13 +47,36 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
     }
   };
 
+  // toggle user info drawer
+  const toggleUserInfoDrawer = () => {
+    setOpenUserInfo((prev) => !prev);
+  };
+
   useEffect(() => {
     // fetch users from JSONplaceholder
     fetchUserListData();
   }, []);
 
+  useEffect(() => {
+    // Get user details
+    if (userID) {
+      console.log("CURRENT USER : +++++ ", userID);
+      const user = users?.find((user) => user.id === userID);
+      setUserDetail(user);
+    }
+  }, [userID, users]);
+
   return (
-    <UserListContext.Provider value={{ users }}>
+    <UserListContext.Provider
+      value={{
+        users,
+        openUserInfo,
+        userDetail,
+        userID,
+        setUserID,
+        setOpenUserInfo: toggleUserInfoDrawer,
+      }}
+    >
       {children}
     </UserListContext.Provider>
   );
@@ -51,7 +85,9 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
 export const useUserListProvider = () => {
   const context = React.useContext(UserListContext);
   if (!context) {
-    throw new Error( "UserListContext can only be used inside the UserListProvider!");
+    throw new Error(
+      "UserListContext can only be used inside the UserListProvider!"
+    );
   }
   return context;
 };

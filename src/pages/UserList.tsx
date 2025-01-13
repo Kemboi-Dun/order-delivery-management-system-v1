@@ -8,24 +8,30 @@ import { Button, Flex, Table, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import DefaultButton from "../components/customComponents/DefaultButton";
 import { useColumnSearch } from "../utils/HelperFunctions";
+import UserInfo from "../components/UserInfo";
 
 // user list table
 const UserListTable: React.FC = () => {
   const { getColumnSearchProps } = useColumnSearch();
+  const { setUserID, setOpenUserInfo } = useUserListProvider();
 
   const [filteredInfo, setFilteredInfo] = useState<UserListFilterType>({});
 
   // Table onchange handler
   const handleChange = (pagination: any, filters: any, statusList: any) => {
     setFilteredInfo(filters);
-    console.log("FILTERS ::: ---- ", filters);
   };
 
   // reset filters handler
 
   const clearFilters = () => {
     setFilteredInfo({});
-    console.log("TEST RESET: ==== ");
+  };
+
+  // user info drawer handler
+  const handleUserInfoDrawer = (userId: number) => {
+    setUserID(userId);
+    setOpenUserInfo(true);
   };
 
   // users table columns
@@ -88,7 +94,7 @@ const UserListTable: React.FC = () => {
         <DefaultButton
           type="primary"
           icon={<i className="fa-solid fa-address-card"></i>}
-          onClick={() => console.log("BUTTON VALUE: ===== ", value)}
+          onClick={() => handleUserInfoDrawer(value)}
         >
           View Info
         </DefaultButton>
@@ -118,6 +124,7 @@ const UserListTable: React.FC = () => {
         dataSource={users}
         rowKey="id"
         onChange={handleChange}
+        
       />
     </>
   );
@@ -138,6 +145,7 @@ const UserList = () => {
 
       <UserListProvider>
         <UserListTable />
+        <UserInfo />
       </UserListProvider>
     </>
   );

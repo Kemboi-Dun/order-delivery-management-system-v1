@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormattedDateString } from "../hooks/DateHook";
-import {  Button, Table, Tag } from "antd";
+import { Button, Table, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 import { statusColorTag } from "../utils/HelperFunctions";
 
@@ -10,12 +10,6 @@ interface CustomerInfoOrdersInterface {
 const CustomerInfoOrders: React.FC<CustomerInfoOrdersInterface> = ({
   orders,
 }) => {
-  console.log("CUSTOMER ORDERS : ---- ", orders);
-  console.log(
-    "TEST FORMAT DATE  ::: ---- ",
-    useFormattedDateString("2024-12-29T14:00:00+03:00")
-  );
-
   const navigate = useNavigate();
 
   // orders column
