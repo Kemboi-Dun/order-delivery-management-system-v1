@@ -23,9 +23,7 @@ const searchInputStyle: React.CSSProperties = {
   width: "30%",
 };
 
-
-
-const MemoizedUserInfo = React.memo(CustomerInfoDrawer)
+const MemoizedUserInfo = React.memo(CustomerInfoDrawer);
 
 const CustomersList = () => {
   // customer list columns
@@ -156,10 +154,6 @@ const CustomersList = () => {
   useEffect(() => {
     updateTable();
   }, [searchText]);
-
-
-
-
 
   return (
     <>

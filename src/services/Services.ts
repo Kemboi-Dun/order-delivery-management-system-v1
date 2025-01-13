@@ -25,6 +25,20 @@ const OrdersService = {
       throw error;
     }
   },
+  async fetchUserList() {
+    try {
+      const url = "https://jsonplaceholder.typicode.com/users";
+      const response = await axios.get(url);
+      if (!response.data) {
+        throw new Error("Message: No data was returned");
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("ERROR FETCHING USERS FROM JSONplaceholder ----- ", error);
+      throw error;
+    }
+  },
 };
 
 export default OrdersService;
