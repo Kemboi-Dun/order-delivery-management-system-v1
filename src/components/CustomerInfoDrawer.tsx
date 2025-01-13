@@ -12,7 +12,7 @@ interface CustomerInfoInterface {
   customerID: number;
 }
 // style live map wrapper
-const livemapStyles: React.CSSProperties = {
+export const livemapStyles: React.CSSProperties = {
   width: "100%",
   height: "50vh",
 };

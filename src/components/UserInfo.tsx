@@ -1,9 +1,19 @@
-import { Descriptions, DescriptionsProps, Divider, Drawer } from "antd";
+import {
+  Descriptions,
+  DescriptionsProps,
+  Divider,
+  Drawer,
+  Tabs,
+  TabsProps,
+} from "antd";
 import React from "react";
 import { useUserListProvider } from "../context/UserListContext";
+import LiveLocationMap from "./LiveLocationMap";
+import { livemapStyles } from "./CustomerInfoDrawer";
 
-const UserInfo: React.FC = () => {
-  const { userDetail, setOpenUserInfo, openUserInfo } = useUserListProvider();
+// user info descriptionsection
+const UserInfoTab: React.FC = () => {
+  const { userDetail } = useUserListProvider();
   // description items
   const profilDescriptionItems: DescriptionsProps["items"] = [
     {
@@ -70,7 +80,6 @@ const UserInfo: React.FC = () => {
       key: "bs",
       label: "Bs",
       children: userDetail?.company.bs,
-     
     },
     {
       key: "catchPhrase",
@@ -80,6 +89,53 @@ const UserInfo: React.FC = () => {
     },
   ];
   return (
+    <>
+      <Descriptions items={profilDescriptionItems} title="User profile" />
+      <Divider />
+      <Descriptions items={addressItems} title="Address" />
+      <Divider />
+      <Descriptions items={companyItems} title="Company" size="middle" />
+    </>
+  );
+};
+
+// user map location
+const UserLocations: React.FC = () => {
+  const { userDetail } = useUserListProvider();
+  //TODO ; Update to use context APi
+  const userCoordinates: any = {
+    latitude: userDetail?.address.geo.lat,
+    longitude: userDetail?.address.geo.lng,
+    location: `${userDetail?.address.suite}, ${userDetail?.address.street}`,
+  };
+
+  return (
+    <div style={{width:'100%', height:'70vh'}}>
+      <LiveLocationMap customerCoordinates={userCoordinates} />
+    </div>
+  );
+};
+
+const UserInfo: React.FC = () => {
+  const { userDetail, setOpenUserInfo, openUserInfo } = useUserListProvider();
+
+  // tab items
+  const userTabItems: TabsProps["items"] = [
+    {
+      key: "profile",
+      label: "Profile",
+      children: <UserInfoTab />,
+      icon: <i className="fa-regular fa-address-card"></i>,
+    },
+    {
+      key: "live_location",
+      label: "Location",
+      children: <UserLocations />,
+      icon: <i className="fa-solid fa-location-dot"></i>,
+    },
+  ];
+
+  return (
     <Drawer
       title={<p>{userDetail?.name}</p>}
       onClose={() => setOpenUserInfo(false)}
@@ -87,11 +143,7 @@ const UserInfo: React.FC = () => {
       open={openUserInfo}
       width={600}
     >
-      <Descriptions items={profilDescriptionItems} title="User profile" />
-      <Divider />
-      <Descriptions items={addressItems} title="Address" />
-      <Divider />
-      <Descriptions items={companyItems} title="Company" size="middle" />
+      <Tabs defaultActiveKey="profile" items={userTabItems} />
     </Drawer>
   );
 };
