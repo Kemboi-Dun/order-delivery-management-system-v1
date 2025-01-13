@@ -102,7 +102,7 @@ const UserListTable: React.FC = () => {
     },
   ];
 
-  const { users } = useUserListProvider();
+  const { users, loading } = useUserListProvider();
   return (
     <>
       <Flex
@@ -124,7 +124,7 @@ const UserListTable: React.FC = () => {
         dataSource={users}
         rowKey="id"
         onChange={handleChange}
-        
+        loading={loading}
       />
     </>
   );

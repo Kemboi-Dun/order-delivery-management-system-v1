@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import {
   Breadcrumb,
   Button,
+  Descriptions,
+  DescriptionsProps,
   Divider,
   Drawer,
   Flex,
@@ -363,60 +365,110 @@ const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
   const paymentDetails = orderDetail?.paymentDetails || null;
   const deliveryDetails = orderDetail?.deliveryDetails || null;
 
+  // order details [payment and address]
+
+  const transactionId: any = () => {
+    // return transaction ID info if payment method is M-PESA
+    if (
+      paymentDetails?.transactionId &&
+      paymentDetails?.paymentMethod === "M-Pesa"
+    ) {
+      return {
+        key: "transactionId",
+        label: "Transaction ID",
+        children: paymentDetails?.transactionId,
+      span:3
+      };
+    }
+  };
+
+  const paymentItems: DescriptionsProps["items"] = [
+    {
+      key: "paymentMethod",
+      label: "Payment Method",
+      children: paymentDetails?.paymentMethod,
+     span:3
+    },
+    transactionId(),
+    {
+      key: "amount",
+      label: "Amount paid",
+      children: paymentDetails?.amountPaid,
+      span:3
+    },
+    {
+      key: "paymentDate",
+      label: "Payment Date",
+      children: useFormattedDateString(paymentDetails?.paymentDate),
+      span:3
+    },
+  ];
+
+  const deliveryItems: DescriptionsProps["items"] = [
+    {
+      key: "name",
+      label: "Name",
+      children: deliveryDetails?.deliveryAddress.name,
+      span:3
+    },
+    {
+      key: "street",
+      label: "Street",
+      children: deliveryDetails?.deliveryAddress.street,
+      span:3
+    },
+    {
+      key: "town",
+      label: "Town",
+      children: deliveryDetails?.deliveryAddress.town,
+      span:3
+    },
+    {
+      key: "postalCode",
+      label: "Postal Code",
+      children: deliveryDetails?.deliveryAddress.postalCode,
+      span:3
+    },
+    {
+      key: "county",
+      label: "County",
+      children: `${deliveryDetails?.deliveryAddress?.county}, ${deliveryDetails?.deliveryAddress?.country}`,
+      span:3
+    },
+  ];
+
   return (
-    <Flex gap="middle" align="start" style={{ height: "100%", width: "100%" }}>
-      <OrderItems orderDetail={orderDetail} />
+    <>
+ 
 
-      <div style={{ width: "40%", height: "100%", overflowY: "auto" }}>
-        <Flex vertical gap="small">
-          <Title level={4}>Payment details</Title>
-          <p>
-            <b>Payment method:</b> {paymentDetails?.paymentMethod}
-          </p>
-          {paymentDetails?.transactionId && (
-            <p>
-              <b>Transaction ID:</b> {paymentDetails?.transactionId}
-            </p>
-          )}
-          <p>
-            <b>Amount paid:</b> {paymentDetails?.currency}{" "}
-            {paymentDetails?.amountPaid}
-          </p>
-          <p>
-            <b>Payment Date :</b>{" "}
-            {useFormattedDateString(paymentDetails?.paymentDate)}
-          </p>
-          <Divider />
-          <Flex gap="large" align="center" justify="space-between">
-            <Title level={4}>Delivery details</Title>
 
-            <p style={{ textDecoration: "underline" }}>
-              <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
-            </p>
-          </Flex>
 
-          <Flex gap="middle" justify="space-between" align="center" wrap>
-            <p>
-              <b>Name: </b> {deliveryDetails?.deliveryAddress.name}
-            </p>
-            <p>
-              <b>Street: </b> {deliveryDetails?.deliveryAddress.street}
-            </p>
-            <p>
-              <b>Town: </b> {deliveryDetails?.deliveryAddress?.town}
-            </p>
-            <p>
-              <b>Postal Code: </b>{" "}
-              {deliveryDetails?.deliveryAddress?.postalCode}
-            </p>
-            <p>
-              <b>County: </b> {deliveryDetails?.deliveryAddress?.county},
-              {deliveryDetails?.deliveryAddress?.country}{" "}
-            </p>
-          </Flex>
-        </Flex>
-      </div>
-    </Flex>
+<Flex
+        gap="middle"
+        align="start"
+        style={{ height: "100%", width: "100%" }}
+      >
+        <OrderItems orderDetail={orderDetail} />
+
+       
+<div style={{ width: "40%", height: "100%", overflowY: "auto"}}>
+
+        <Descriptions items={paymentItems} title="Payment Details" />
+      <Divider/>
+      <Descriptions
+        items={deliveryItems}
+        title="Delivery Details"
+        extra={
+          <p style={{ textDecoration: "underline" }}>
+            <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
+          </p>
+        }
+      />
+</div>
+
+      </Flex>
+
+    </>
   );
 };
 

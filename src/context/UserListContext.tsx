@@ -9,6 +9,8 @@ interface UserListContextProps {
   userDetail: UserInfoTypes | undefined;
   setUserID: (userId: string | number) => void;
   userID: number | string;
+  loading: boolean;
+  setLoading: (loadingState: boolean) => void;
 }
 
 // create userlist context
@@ -31,8 +33,11 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
     undefined
   );
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   // fetch and store users
   const fetchUserListData = async () => {
+    setLoading(true);
     try {
       // TODO: Update default service file import ---
       const response = await OrdersService.fetchUserList();
@@ -44,6 +49,8 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
     } catch (error) {
       console.error("Error: Could not fetch user list data");
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -74,6 +81,8 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
         userDetail,
         userID,
         setUserID,
+        loading,
+        setLoading,
         setOpenUserInfo: toggleUserInfoDrawer,
       }}
     >
