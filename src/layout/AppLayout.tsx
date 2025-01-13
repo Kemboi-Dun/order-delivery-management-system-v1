@@ -27,6 +27,9 @@ const AppLayout = () => {
             components: {
               Button: {
                 colorPrimary: "#FF3941",
+                colorPrimaryActive: "#B22A2F",
+                colorPrimaryHover: "#D9363E",
+
                 // algorithm: true,
               },
             },

@@ -2,6 +2,7 @@ import { Tabs, TabsProps, Typography } from "antd";
 import React, { useState } from "react";
 import OrderList from "./OrderList";
 import CustomersList from "./CustomersList";
+import { OrdersProvider } from "../context/OrdersContext";
 
 const { Title } = Typography;
 
@@ -9,7 +10,11 @@ const homepageTabs: TabsProps["items"] = [
   {
     key: "orders",
     label: "Orders",
-    children: <OrderList />,
+    children: (
+      <OrdersProvider>
+        <OrderList />
+      </OrdersProvider>
+    ),
     icon: <i className="fa-solid fa-list"></i>,
   },
   {

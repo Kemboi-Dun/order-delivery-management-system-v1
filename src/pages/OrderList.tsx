@@ -6,6 +6,7 @@ import {
   Flex,
   Input,
   message,
+  Modal,
   Popconfirm,
   PopconfirmProps,
   Space,
@@ -21,10 +22,11 @@ import { FilterFilled, SearchOutlined } from "@ant-design/icons";
 import get from "lodash/get";
 import { useNavigate } from "react-router-dom";
 import FilterButton from "../components/customComponents/FilterButton";
+import RidersTable from "../components/RidersTable";
 
 // filter values
 
-const orders: any[] = orderList;
+const orders: any[] = Array.isArray(orderList) ? orderList : [];
 
 // orders table style
 const ordersTableStyle: React.CSSProperties = {
@@ -56,10 +58,6 @@ const OrdersTable: React.FC = () => {
 
   const navigate = useNavigate();
 
-  if (filteredData) {
-    console.log("FILTERED DATA----------", filteredData);
-  }
-
   const handleSearch = (
     selectedKeys: any[],
     confirm: any,
@@ -83,7 +81,7 @@ const OrdersTable: React.FC = () => {
   const handleChange = (pagination: any, filters: any, statusList: any) => {
     console.log("CHANGED PARAMS : --- ", filters);
     setFilteredInfo(filters);
-    setStatusFilter(statusList);
+    // setStatusFilter(statusList);
   };
 
   // Handle filtering by status outside the table
@@ -95,7 +93,7 @@ const OrdersTable: React.FC = () => {
     }
   };
 
-  const getColumnSearchProps = (dataIndex: string) => ({
+  const getColumnSearchProps = (dataIndex: any) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -204,9 +202,10 @@ const OrdersTable: React.FC = () => {
     {
       title: "Customer",
       dataIndex: ["customer", "name"],
-      key: "name",
+      key: "customer",
+      // render: (value: string) => <p>{value?.name}</p>,
       filteredValue: filteredInfo?.customer || null,
-      ...getColumnSearchProps("customer.name"),
+      ...getColumnSearchProps(["customer", "name"]),
     },
     {
       title: "Status",
@@ -264,7 +263,7 @@ const OrdersTable: React.FC = () => {
       title: "Total",
       dataIndex: "total",
       key: "total",
-      sortOrder: "descend" as "descend" | "ascend" | undefined,
+      // sortOrder: "descend" as "descend" | "ascend" | undefined,
       sorter: (a: any, b: any) => a.total - b.total,
       render: (value: any) => <p>KES {value}</p>,
       filteredValue: filteredInfo?.total || null,
@@ -297,9 +296,9 @@ const OrdersTable: React.FC = () => {
     {
       title: "Shipping Address",
       dataIndex: ["shippingAddress", "name"],
-      key: "name",
+      key: "shippingAddress",
       filteredValue: filteredInfo?.shippingAddress || null,
-      ...getColumnSearchProps("shippingAddress.name"),
+      ...getColumnSearchProps(["shippingAddress", "name"]),
     },
     {
       title: "Actions",
@@ -388,6 +387,7 @@ const OrdersTable: React.FC = () => {
   // get the number of orders for each status
   const getOrdersByStatus = (status: string) =>
     useMemo(() => {
+      clearFilters();
       if (status === "all") {
         return orders.length;
       } else {
@@ -403,7 +403,7 @@ const OrdersTable: React.FC = () => {
       <Flex justify="space-between" align="center" gap="large">
         <Space wrap size="large" style={{ margin: "0.5em 0" }}>
           <FilterButton
-            type={activeButton === "all" ? "primary" : "dashed"}
+            type={activeButton === "all" ? "primary" : "default"}
             onClick={() => {
               filterByStatus("all");
               setActiveButton("all");
@@ -412,7 +412,7 @@ const OrdersTable: React.FC = () => {
           >
             All Orders ({getOrdersByStatus("all")})
           </FilterButton>
-          <Button
+          <FilterButton
             type={activeButton === "Processing" ? "primary" : "dashed"}
             onClick={() => {
               filterByStatus("Processing");
@@ -422,8 +422,8 @@ const OrdersTable: React.FC = () => {
           >
             <Badge status="processing" />
             <p>Pending orders ({getOrdersByStatus("Processing")})</p>
-          </Button>
-          <Button
+          </FilterButton>
+          <FilterButton
             type={activeButton === "Dispatched" ? "primary" : "dashed"}
             onClick={() => {
               filterByStatus("Dispatched");
@@ -433,8 +433,8 @@ const OrdersTable: React.FC = () => {
           >
             <Badge status="warning" />
             <p>Dispatched orders ({getOrdersByStatus("Dispatched")})</p>
-          </Button>
-          <Button
+          </FilterButton>
+          <FilterButton
             type={activeButton === "Delivered" ? "primary" : "dashed"}
             onClick={() => {
               filterByStatus("Delivered");
@@ -444,8 +444,8 @@ const OrdersTable: React.FC = () => {
           >
             <Badge status="success" />
             <p>Delivered orders ({getOrdersByStatus("Delivered")})</p>
-          </Button>
-          <Button
+          </FilterButton>
+          <FilterButton
             type={activeButton === "Canceled" ? "primary" : "dashed"}
             onClick={() => {
               filterByStatus("Canceled");
@@ -455,7 +455,7 @@ const OrdersTable: React.FC = () => {
           >
             <Badge status="error" />
             <p>Canceled orders ({getOrdersByStatus("Canceled")})</p>
-          </Button>
+          </FilterButton>
         </Space>
 
         <Button
@@ -466,9 +466,9 @@ const OrdersTable: React.FC = () => {
         </Button>
       </Flex>
 
-      <Table<any>
+      <Table
         columns={ordersColumns}
-        dataSource={filteredData}
+        dataSource={Array.isArray(filteredData) ? filteredData : []}
         style={ordersTableStyle}
         onChange={handleChange}
         rowKey="orderId"
