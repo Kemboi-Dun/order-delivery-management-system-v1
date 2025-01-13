@@ -23,6 +23,7 @@ import get from "lodash/get";
 import { useNavigate } from "react-router-dom";
 import FilterButton from "../components/customComponents/FilterButton";
 import RidersTable from "../components/RidersTable";
+import { useColumnSearch } from "../utils/HelperFunctions";
 
 // filter values
 
@@ -35,9 +36,6 @@ const ordersTableStyle: React.CSSProperties = {
 };
 
 const OrdersTable: React.FC = () => {
-  const [searchedText, setSearchedText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-
   interface FilteredInfo {
     status?: string[];
     orderId?: string[];
@@ -48,31 +46,15 @@ const OrdersTable: React.FC = () => {
     // key?: string;
   }
 
+  const { getColumnSearchProps } = useColumnSearch();
+
   // Add key to order list
 
   const [filteredInfo, setFilteredInfo] = useState<FilteredInfo>({});
 
   const [filteredData, setStatusFilter] = useState<FilteredInfo[]>(orders);
 
-  const searchInput = useRef<any>(null);
-
   const navigate = useNavigate();
-
-  const handleSearch = (
-    selectedKeys: any[],
-    confirm: any,
-    dataIndex: string
-  ) => {
-    confirm();
-    setSearchedText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-
-  // reset filters
-  const handleReset = (clearFilters: any) => {
-    clearFilters();
-    setSearchedText("");
-  };
 
   const clearFilters = () => {
     setFilteredInfo({});
@@ -92,92 +74,6 @@ const OrdersTable: React.FC = () => {
       setStatusFilter(orders.filter((item: any) => item?.status === status));
     }
   };
-
-  const getColumnSearchProps = (dataIndex: any) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }: any) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Flex gap="small">
-          <Input
-            ref={searchInput}
-            placeholder={`Search ${dataIndex}`}
-            value={selectedKeys[0]}
-            onChange={(e) =>
-              setSelectedKeys(e.target.value ? [e.target.value] : [])
-            }
-            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            style={{ marginBottom: 8, display: "block" }}
-          />
-          <Button
-            type="default"
-            icon={<FilterFilled />}
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchedText(selectedKeys[0]);
-              setSearchedText(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-        </Flex>
-
-        <Flex justify="space-between" gap="middle" align="center">
-          <Space>
-            <Button
-              type="primary"
-              size="small"
-              icon={<SearchOutlined />}
-              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            >
-              Search
-            </Button>
-
-            <Button
-              type="dashed"
-              onClick={() => clearFilters && handleReset(clearFilters)}
-            >
-              Reset
-            </Button>
-          </Space>
-          <Button size="small" type="link" onClick={() => close()}>
-            Close
-          </Button>
-        </Flex>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
-    onFilter: (value: any, record: any) =>
-      get(record, dataIndex)
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    filterDropdownProps: {
-      onOpenChange(open: boolean) {
-        if (open) {
-          if (open) {
-            setTimeout(() => searchInput.current?.select(), 100);
-          }
-        }
-      },
-
-      render: (text: string) => {
-        searchedColumn === dataIndex ? (
-          <p style={{ textDecoration: "underline" }}>{text}</p>
-        ) : (
-          text
-        );
-      },
-    },
-  });
 
   //handle delete order
   const confirmDelete: PopconfirmProps["onConfirm"] = (e) => {

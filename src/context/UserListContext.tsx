@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { UserInfoTypes } from "../types/Types";
 import OrdersService from "../services/Services";
 
@@ -46,4 +46,12 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
       {children}
     </UserListContext.Provider>
   );
+};
+
+export const useUserListProvider = () => {
+  const context = React.useContext(UserListContext);
+  if (!context) {
+    throw new Error( "UserListContext can only be used inside the UserListProvider!");
+  }
+  return context;
 };

@@ -16,6 +16,7 @@ import CustomerInfoDrawer from "../components/CustomerInfoDrawer";
 import { statusColorTag } from "../utils/HelperFunctions";
 import useCustomDebounce from "../hooks/DebounceHook";
 import { useDebounce } from "use-debounce";
+import { useNavigate } from "react-router-dom";
 // import useCustomDebounce from "../hooks/DebounceHook";
 
 const searchInputStyle: React.CSSProperties = {
@@ -26,6 +27,8 @@ const searchInputStyle: React.CSSProperties = {
 const MemoizedUserInfo = React.memo(CustomerInfoDrawer);
 
 const CustomersList = () => {
+  const navigate = useNavigate();
+
   // customer list columns
   const customerTableColumns = [
     {
@@ -157,14 +160,19 @@ const CustomersList = () => {
 
   return (
     <>
-      <Input
-        type="search"
-        value={searchText}
-        onChange={handleCustomerSearch}
-        placeholder="Search customer"
-        style={searchInputStyle}
-        suffix={<i className="fa-solid fa-magnifying-glass"></i>}
-      />
+      <Flex justify="space-between" align="center" gap="large" style={{margin:'0.5em 0'}}>
+        <Input
+          type="search"
+          value={searchText}
+          onChange={handleCustomerSearch}
+          placeholder="Search customer"
+          style={searchInputStyle}
+          suffix={<i className="fa-solid fa-magnifying-glass"></i>}
+        />
+        <Button type="default" onClick={() => navigate("users")}>
+          View Users [API]
+        </Button>
+      </Flex>
 
       <Table
         dataSource={customerData}

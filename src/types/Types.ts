@@ -1,5 +1,5 @@
 import { ColumnGroupType, ColumnsType } from "antd/es/table";
-import React from "react";
+import React, { ReactNode } from "react";
 
 export type CustomerDetailType = {
   id?: number;
@@ -80,7 +80,10 @@ export interface FilterButtonProps {
   type?: "primary" | "default" | "text" | "dashed";
   onClick: () => void;
   children: React.ReactNode;
+  icon?: ReactNode;
 }
+
+export interface DefaultButtonProps extends FilterButtonProps {}
 
 export type UserInfoTypes = {
   id: number;
@@ -109,3 +112,11 @@ export type UserInfoTypes = {
 export interface UserListProps {
   users: UserInfoTypes[];
 }
+
+export type UserListFilterType = {
+  name?: string[];
+  email?: string[];
+  phone?: string[];
+  address?: string[];
+  company?: string[];
+};
