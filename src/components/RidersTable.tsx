@@ -20,7 +20,7 @@ const RidersTable: React.FC = () => {
   const [api, contextHolder] = notification.useNotification();
 
   // dispatch handler
-  const openDispatchHandler = () => {
+ const openDispatchHandler = () => {
     api["info"]({
       message: "Request sent",
       description: " Awaiting confirmation from rider.",
@@ -156,6 +156,7 @@ const RidersTable: React.FC = () => {
             type="primary"
             style={{ background: "#FF8225" }}
             onClick={openDispatchHandler}
+            disabled={record?.status !== "available"}
           >
             Dispatch
           </Button>
