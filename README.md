@@ -1,3 +1,39 @@
+# Order Delivery Management system [V1]
+## Setup instructions
+1. Clone this repository:
+
+```
+git clone git@github.com:Kemboi-Dun/order-delivery-management-system-v1.git 
+```
+2. cd into the project
+```
+cd order-delivery-management-system-v1
+ ```
+
+3. Install dependencies
+```
+npm install
+ ```
+
+> [!WARNING]
+> ``VITE_MAPBOX_ACCESS_TOKEN`` variable should be in an .env file.
+
+4. Run development server:
+``` 
+npm run dev
+ ```
+
+5. Build the project:
+```
+ npm run build 
+ ```
+
+6. Preview the project ( production build)
+```
+ npm run preview 
+ ```
+
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
