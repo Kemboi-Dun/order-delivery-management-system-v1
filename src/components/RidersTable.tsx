@@ -64,7 +64,7 @@ const RidersTable: React.FC = () => {
     });
   };
 
-  const confirmRiderStatus: PopconfirmProps["onConfirm"] = (e) => {
+  const confirmRiderStatus: PopconfirmProps["onConfirm"] = () => {
     message.info("Rider status updated");
   };
 
@@ -150,7 +150,7 @@ const RidersTable: React.FC = () => {
       title: "Actions",
       key: "id",
       dataIndex: "id",
-      render: (value: number, record: any) => (
+      render: (_: number, record: any) => (
         <Flex vertical gap="small">
           <Button
             type="primary"

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, ButtonProps } from "antd";
+import { Button } from "antd";
 import { CustomButtonProp } from "../../types/Types";
 
 const FilterButton: React.FC<CustomButtonProp> = ({
