@@ -1,4 +1,6 @@
-import React, { ReactNode } from "react";
+import { ButtonProps } from "antd";
+// import { extend } from "lodash";
+// import React, { ReactNode } from "react";
 
 export type CustomerDetailType = {
   id?: number;
@@ -77,15 +79,7 @@ export type RoutingCoordinatesTypes = {
   destination: number[];
 };
 
-export interface FilterButtonProps {
-  label?: string;
-  type?: "primary" | "default" | "text" | "dashed";
-  onClick: () => void;
-  children: React.ReactNode;
-  icon?: ReactNode;
-}
-
-export interface DefaultButtonProps extends FilterButtonProps {}
+export interface DefaultButtonProps extends ButtonProps {}
 
 export type UserInfoTypes = {
   id: number;

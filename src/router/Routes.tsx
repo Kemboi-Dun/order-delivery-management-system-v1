@@ -21,6 +21,8 @@ const UserList = Loadable(lazy(() => import("../pages/UserList")));
 
 const ErrorPage = Loadable(lazy(() => import("../pages/ErrorPage")));
 
+const UserDetail = Loadable(lazy(() => import("../pages/CustomerDetail")));
+
 const Routes: RouteObject[] = [
   {
     path: "/",
@@ -30,10 +32,10 @@ const Routes: RouteObject[] = [
         path: "/",
         element: <HomePage />,
       },
-      // {
-      //   path: "/orders",
-      //   element: <OrdersList />,
-      // },
+      {
+        path: "/user/:user_id",
+        element: <UserDetail />,
+      },
       {
         path: "/order/:order_id",
         element: <OrderDetail />,
