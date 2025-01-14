@@ -287,7 +287,7 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
         md: "70%",
         lg: "80%",
         xl: "80%",
-        xxl: "40%",
+        xxl: "80%",
       }}
     >
       <div style={trackOrderMapStyles}>
@@ -385,8 +385,12 @@ const OrderInfoSection: React.FC = () => {
         gap="middle"
         align="start"
         style={{ height: "100%", width: "100%" }}
+        justify="space-between"
       >
+        <div style={{width:"50%"}}>
+
         <OrderItems orderDetail={orderDetail} />
+        </div>
 
         <div style={{ width: "40%", height: "100%", overflowY: "auto" }}>
           <Descriptions items={paymentItems} title="Payment Details" />
