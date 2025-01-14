@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import FilterButton from "../components/customComponents/FilterButton";
 
 import { useColumnSearch } from "../utils/HelperFunctions";
+import DispatchModal from "../components/DispatchModal";
 
 // filter values
 
@@ -79,6 +80,12 @@ const OrdersTable: React.FC = () => {
     console.log(e);
     message.error("Order not deleted");
   };
+
+  // Rider modal handler
+  const [openRiderModal, setOpenRiderModal] = useState(false);
+
+  const OpenRiderModal = () => setOpenRiderModal(true);
+  const CloseRiderModal = () => setOpenRiderModal(false);
 
   // Orders table columns
   const ordersColumns = [
@@ -214,9 +221,10 @@ const OrdersTable: React.FC = () => {
                     label: (
                       <Button
                         type="text"
-                        icon={<i className="fa-solid fa-person-biking"></i>}
+                        icon={<i className="fa-solid fa-user-tag"></i>}
+                        onClick={OpenRiderModal}
                       >
-                        Dispatch
+                        Assign Rider
                       </Button>
                     ),
                   },
@@ -363,6 +371,7 @@ const OrdersTable: React.FC = () => {
         onChange={handleChange}
         rowKey="orderId"
       />
+      <DispatchModal open={openRiderModal} setCloseModal={CloseRiderModal} />
     </>
   );
 };

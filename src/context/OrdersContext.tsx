@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import OrderList from "../data/Orders.json";
+import Riders from "../data/Riders.json";
 
 interface OrdersContextType {
   orders: any[];
@@ -22,11 +23,16 @@ interface OrdersProviderProps {
 
 export const OrdersProvider: FC<OrdersProviderProps> = ({ children }) => {
   const [orders, setOrders] = useState<any[]>([]);
-  const [riders] = useState<any[]>([]);
+  const [riders, setRiders] = useState<any[]>([]);
 
   useEffect(() => {
     if (OrderList?.length) {
       setOrders(OrderList);
+    }
+  }, []);
+  useEffect(() => {
+    if (Riders?.length) {
+      setRiders(Riders);
     }
   }, []);
 

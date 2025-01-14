@@ -1,6 +1,7 @@
 import { ButtonProps } from "antd";
-// import { extend } from "lodash";
-// import React, { ReactNode } from "react";
+export interface CustomButtonProp extends ButtonProps {
+  customStyle?: React.CSSProperties;
+}
 
 export type CustomerDetailType = {
   id?: number;
