@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import CustomerDetailedDescription from "../components/CustomerDetailedDescription";
-import { Button } from "antd";
+// import { Button } from "antd";
 import FilterButton from "../components/customComponents/FilterButton";
 
 const CustomerDetail: React.FC = () => {

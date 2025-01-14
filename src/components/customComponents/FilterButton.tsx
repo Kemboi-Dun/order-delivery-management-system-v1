@@ -3,7 +3,7 @@ import React from "react";
 import { Button, ButtonProps } from "antd";
 
 interface FilterButtonProp extends ButtonProps {
-  customStyle: React.CSSProperties;
+  customStyle?: React.CSSProperties;
 }
 
 const FilterButton: React.FC<FilterButtonProp> = ({

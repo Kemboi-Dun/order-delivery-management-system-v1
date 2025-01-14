@@ -1,6 +1,6 @@
 import { ButtonProps } from "antd";
-import { extend } from "lodash";
-import React, { ReactNode } from "react";
+// import { extend } from "lodash";
+// import React, { ReactNode } from "react";
 
 export type CustomerDetailType = {
   id?: number;
