@@ -1,6 +1,7 @@
 import { ConfigProvider, Modal, Tabs, TabsProps } from "antd";
 import React from "react";
 import RidersTable from "./RidersTable";
+import RidersMapWrapper from "./mapWrappers/RidersMapWrapper";
 // import RidersTable from "./RidersTable";
 
 interface DispatchTableProps {
@@ -23,7 +24,7 @@ const DispatchModal: React.FC<DispatchTableProps> = ({
     {
       label: "Map",
       key: "riders_map",
-      children: <RidersTable />,
+      children: <RidersMapWrapper />,
       icon: <i className="fa-solid fa-magnifying-glass-location"></i>,
     },
   ];
