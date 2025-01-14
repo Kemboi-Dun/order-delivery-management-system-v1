@@ -1,12 +1,11 @@
 import { Button, ConfigProvider } from "antd";
 import React from "react";
-import { DefaultButtonProps } from "../../types/Types";
+import { CustomButtonProp } from "../../types/Types";
 
-const DefaultButton: React.FC<DefaultButtonProps> = ({
-  icon,
-  type = "primary",
-  onClick,
+const DefaultButton: React.FC<CustomButtonProp> = ({
+  customStyle,
   children,
+  ...props
 }) => {
   return (
     <ConfigProvider
@@ -19,7 +18,7 @@ const DefaultButton: React.FC<DefaultButtonProps> = ({
         },
       }}
     >
-      <Button type={type} onClick={onClick} icon={icon}>
+      <Button {...props} style={{ ...customStyle }}>
         {children}
       </Button>
     </ConfigProvider>

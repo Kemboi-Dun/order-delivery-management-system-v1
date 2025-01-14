@@ -1,12 +1,9 @@
 import React from "react";
 
-import { Button, ButtonProps } from "antd";
+import { Button } from "antd";
+import { CustomButtonProp } from "../../types/Types";
 
-interface FilterButtonProp extends ButtonProps {
-  customStyle?: React.CSSProperties;
-}
-
-const FilterButton: React.FC<FilterButtonProp> = ({
+const FilterButton: React.FC<CustomButtonProp> = ({
   customStyle,
   type = "default",
   children,
