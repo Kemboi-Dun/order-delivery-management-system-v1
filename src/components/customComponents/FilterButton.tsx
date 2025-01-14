@@ -3,7 +3,6 @@ import { FilterButtonProps } from "../../types/Types";
 import { Button } from "antd";
 
 const FilterButton: React.FC<FilterButtonProps> = ({
-  label,
   type = "default",
   onClick,
   children,

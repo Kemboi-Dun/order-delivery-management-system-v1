@@ -22,7 +22,7 @@ interface OrdersProviderProps {
 
 export const OrdersProvider: FC<OrdersProviderProps> = ({ children }) => {
   const [orders, setOrders] = useState<any[]>([]);
-  const [riders, setRiders] = useState<any[]>([]);
+  const [riders] = useState<any[]>([]);
 
   useEffect(() => {
     if (OrderList?.length) {

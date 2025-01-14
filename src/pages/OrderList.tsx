@@ -1,28 +1,21 @@
 import {
   Badge,
-  Breadcrumb,
   Button,
   Dropdown,
   Flex,
-  Input,
   message,
-  Modal,
   Popconfirm,
   PopconfirmProps,
   Space,
   Table,
-  Typography,
 } from "antd";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import orderList from "../data/Orders.json";
-import { useFormattedDateString } from "../hooks/DateHook";
-import { FilterFilled, SearchOutlined } from "@ant-design/icons";
 
-import get from "lodash/get";
 import { useNavigate } from "react-router-dom";
 import FilterButton from "../components/customComponents/FilterButton";
-import RidersTable from "../components/RidersTable";
+
 import { useColumnSearch } from "../utils/HelperFunctions";
 
 // filter values
@@ -62,6 +55,7 @@ const OrdersTable: React.FC = () => {
 
   const handleChange = (pagination: any, filters: any, statusList: any) => {
     console.log("CHANGED PARAMS : --- ", filters);
+    console.log("NULL: ==== ", pagination, statusList);
     setFilteredInfo(filters);
     // setStatusFilter(statusList);
   };
@@ -250,10 +244,10 @@ const OrdersTable: React.FC = () => {
                 ],
               }}
             >
-              <i
-                className="fa-solid fa-ellipsis-vertical"
-                style={{ cursor: "pointer" }}
-              ></i>
+              <Button
+                icon={<i className="fa-solid fa-ellipsis-vertical"></i>}
+                type="text"
+              ></Button>
             </Dropdown>
           </Space>
         </>

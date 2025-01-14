@@ -1,7 +1,7 @@
 import { Drawer, Flex, Tabs, TabsProps, Typography } from "antd";
 import React from "react";
 import CustomerListData from "../data/CustomerList.json";
-import LiveLocationMap from "./LiveLocationMap";
+// import LiveLocationMap from "./LiveLocationMap";
 import CustomerInfoOrders from "./CustomerInfoOrders";
 import { useOrderDetailProvider } from "../context/OrderDetailContext";
 import CustomerLocationWrapper from "./mapWrappers/CustomerLocationWrapper";

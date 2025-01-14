@@ -8,9 +8,8 @@ import {
 } from "antd";
 import React from "react";
 import { useUserListProvider } from "../context/UserListContext";
-import LiveLocationMap from "./LiveLocationMap";
-import CustomerLocationWrapper from "./mapWrappers/CustomerLocationWrapper";
 
+import CustomerLocationWrapper from "./mapWrappers/CustomerLocationWrapper";
 
 // user info descriptionsection
 const UserInfoTab: React.FC = () => {
@@ -111,7 +110,7 @@ const UserLocations: React.FC = () => {
   };
 
   return (
-    <div style={{width:'100%', height:'70vh'}}>
+    <div style={{ width: "100%", height: "70vh" }}>
       <CustomerLocationWrapper customerCoordinates={userCoordinates} />
     </div>
   );

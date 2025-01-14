@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import OrderList from "./OrderList";
 import CustomersList from "./CustomersList";
 import { OrdersProvider } from "../context/OrdersContext";
+import { OrderDetailProvider } from "../context/OrderDetailContext";
 
 const { Title } = Typography;
 
@@ -20,12 +21,16 @@ const homepageTabs: TabsProps["items"] = [
   {
     key: "customers",
     label: "Customers",
-    children: <CustomersList />,
+    children: (
+      <OrderDetailProvider>
+        <CustomersList />
+      </OrderDetailProvider>
+    ),
     icon: <i className="fa-solid fa-users"></i>,
   },
 ];
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   const [tabTitle, setTabTitle] = useState<"Orders" | "Customers" | any>(
     "Orders"
   );

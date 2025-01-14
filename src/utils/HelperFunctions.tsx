@@ -36,7 +36,7 @@ export const useColumnSearch = () => {
   const [searchedText, setSearchedText] = useState<string>("");
   const [searchedColumn, setSearchedColumn] = useState<string>("");
   const searchInput = useRef<any>(null);
-
+  console.log("NULL: ==", searchedText);
   // Search handler
   const handleSearch = ({
     selectedKeys,

@@ -1,12 +1,10 @@
 import {
-  Breadcrumb,
   Button,
   Flex,
   Input,
   message,
   Popconfirm,
   PopconfirmProps,
-  Space,
   Table,
   Tag,
 } from "antd";
@@ -15,8 +13,11 @@ import CustomerListData from "../data/CustomerList.json";
 import CustomerInfoDrawer from "../components/CustomerInfoDrawer";
 import { statusColorTag } from "../utils/HelperFunctions";
 import useCustomDebounce from "../hooks/DebounceHook";
-import { useDebounce } from "use-debounce";
 import { useNavigate } from "react-router-dom";
+import {
+  
+  useOrderDetailProvider,
+} from "../context/OrderDetailContext";
 // import useCustomDebounce from "../hooks/DebounceHook";
 
 const searchInputStyle: React.CSSProperties = {
@@ -26,8 +27,10 @@ const searchInputStyle: React.CSSProperties = {
 
 const MemoizedUserInfo = React.memo(CustomerInfoDrawer);
 
-const CustomersList = () => {
+const CustomersList: React.FC = () => {
   const navigate = useNavigate();
+
+  const { setCustomerId_info } = useOrderDetailProvider();
 
   // customer list columns
   const customerTableColumns = [
@@ -61,6 +64,7 @@ const CustomersList = () => {
       key: "lastOrder",
       render: (text: any, record: any) => {
         const lastOrder = record.orders[0];
+        console.log("TEST: ---- ", text);
         return lastOrder ? (
           <>
             <p>Order ID: {lastOrder?.orderId}</p>
@@ -87,7 +91,7 @@ const CustomersList = () => {
               type="primary"
               icon={<i className="fa-regular fa-id-card"></i>}
               onClick={() => {
-                setActiveUserId(value);
+                setCustomerId_info(value);
                 setOpenInfoDrawer(true);
               }}
             >
@@ -116,7 +120,7 @@ const CustomersList = () => {
 
   // View customer info
   const [openInfoDrawer, setOpenInfoDrawer] = useState(false);
-  const [activeUserId, setActiveUserId] = useState<number | any>();
+  // const [setActiveUserId] = useState<number | any>();
   const [customerData, setCustomerData] = useState<any[]>(CustomerListData);
 
   //handle deactivate
@@ -160,7 +164,12 @@ const CustomersList = () => {
 
   return (
     <>
-      <Flex justify="space-between" align="center" gap="large" style={{margin:'0.5em 0'}}>
+      <Flex
+        justify="space-between"
+        align="center"
+        gap="large"
+        style={{ margin: "0.5em 0" }}
+      >
         <Input
           type="search"
           value={searchText}
@@ -179,8 +188,8 @@ const CustomersList = () => {
         columns={customerTableColumns}
         rowKey="id"
       />
+
       <MemoizedUserInfo
-        customerID={activeUserId}
         openInfoDrawer={openInfoDrawer}
         onCloseInfoDrawer={() => setOpenInfoDrawer(false)}
       />
