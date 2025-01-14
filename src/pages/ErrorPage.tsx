@@ -1,17 +1,21 @@
-import { Button } from "antd";
+import { Button, Result } from "antd";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const ErrorPage:React.FC = () => {
+const ErrorPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
-      <h1>ErrorPage</h1>
-      <Button type="primary" onClick={() => navigate("/")}>
-        Go Home
-      </Button>
-    </div>
+    <Result
+      status="500"
+      title="Error"
+      subTitle="Sorry, something went wrong."
+      extra={
+        <Button type="primary" onClick={() => navigate("/")}>
+          Back Home
+        </Button>
+      }
+    />
   );
 };
 
