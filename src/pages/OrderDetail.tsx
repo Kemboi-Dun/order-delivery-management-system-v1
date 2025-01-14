@@ -180,6 +180,9 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({ open, onClose }) => {
   const [openInfoDrawer, setOpenInfoDrawer] = useState(false);
   // const activeUserId = customerDetails?.id || 2;
 
+  // setOpenInfoDrawer(true)
+  const navigate = useNavigate();
+
   return (
     <>
       <Drawer
@@ -190,7 +193,7 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({ open, onClose }) => {
           <Button
             icon={<i className="fa-regular fa-address-card"></i>}
             type="primary"
-            onClick={() => setOpenInfoDrawer(true)}
+            onClick={() => navigate(`/user/${customerDetails?.id}`)}
           >
             View Detailed Info
           </Button>

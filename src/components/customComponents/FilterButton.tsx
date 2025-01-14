@@ -1,11 +1,16 @@
 import React from "react";
-import { FilterButtonProps } from "../../types/Types";
-import { Button } from "antd";
 
-const FilterButton: React.FC<FilterButtonProps> = ({
+import { Button, ButtonProps } from "antd";
+
+interface FilterButtonProp extends ButtonProps {
+  customStyle: React.CSSProperties;
+}
+
+const FilterButton: React.FC<FilterButtonProp> = ({
+  customStyle,
   type = "default",
-  onClick,
   children,
+  ...props
 }) => {
   const FilterButtonStyle: React.CSSProperties = {
     borderRadius: "4em",
@@ -14,7 +19,11 @@ const FilterButton: React.FC<FilterButtonProps> = ({
     color: type === "default" ? "#f2f2f2" : "",
   };
   return (
-    <Button type={type} onClick={onClick} style={FilterButtonStyle}>
+    <Button
+      {...props}
+      type={type}
+      style={{ ...FilterButtonStyle, ...customStyle }}
+    >
       {children}
     </Button>
   );
