@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { useOrderProvider } from "../context/OrdersContext";
-import { Badge, Button, Flex, Space, Table, TableProps, Tag } from "antd";
+import {
+  Alert,
+  Badge,
+  Button,
+  Flex,
+  notification,
+  Space,
+  Table,
+  TableProps,
+  Tag,
+} from "antd";
 import { useColumnSearch } from "../utils/HelperFunctions";
 import DefaultButton from "./customComponents/DefaultButton";
 
 const RidersTable: React.FC = () => {
   const { riders } = useOrderProvider();
   const { getColumnSearchProps } = useColumnSearch();
+
+  const [api, contextHolder] = notification.useNotification();
+
+  // dispatch handler
+  const openDispatchHandler = () => {
+    api["info"]({
+      message: "Request sent",
+      description: " Awaiting confirmation from rider.",
+    });
+  };
 
   // Rider status tag color handler
   const getTagStatusColor = (status: string) => {
@@ -92,7 +112,11 @@ const RidersTable: React.FC = () => {
       dataIndex: "id",
       render: (value: number, record: any) => (
         <Flex vertical gap="small">
-          <Button type="primary" style={{ background: "#FF8225" }}>
+          <Button
+            type="primary"
+            style={{ background: "#FF8225" }}
+            onClick={openDispatchHandler}
+          >
             Dispatch
           </Button>
           {record?.status === "deactivated" ? (
@@ -108,6 +132,7 @@ const RidersTable: React.FC = () => {
               Activate
             </Button>
           ) : (
+            
             <Button
               type="text"
               icon={
@@ -127,6 +152,7 @@ const RidersTable: React.FC = () => {
 
   return (
     <>
+      {contextHolder}
       <Table
         dataSource={Array.isArray(riders) ? riders : []}
         rowKey="id"
