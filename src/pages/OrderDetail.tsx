@@ -15,12 +15,7 @@ import {
 } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 
-// import pickUpStations from "../data/PickUpPoints.json";
-
-// import OrderDetails from "../data/OrderDetails.json";
-
 import { useFormattedDateString } from "../hooks/DateHook";
-import LiveLocationMap from "../components/LiveLocationMap";
 
 import {
   OrderDetailsInterface,

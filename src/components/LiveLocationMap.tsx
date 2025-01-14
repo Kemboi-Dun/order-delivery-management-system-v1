@@ -1,23 +1,6 @@
-import React, {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import Map, {
-  Layer,
-  Marker,
-  NavigationControl,
-  Popup,
-  Source,
-} from "react-map-gl";
-import { Badge, Button, Flex, Space, Tooltip } from "antd";
-import OrdersService from "../services/Services";
-import DirectionsDrawer from "./DirectionsDrawer";
-import { RoutingCoordinatesTypes } from "../types/Types";
-import { useOrderDetailProvider } from "../context/OrderDetailContext";
+import Map, { NavigationControl } from "react-map-gl";
 
 interface LiveLocationMapInterface {
   currentViewPort: {

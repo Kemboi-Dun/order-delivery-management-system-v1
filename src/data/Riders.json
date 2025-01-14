@@ -1,0 +1,113 @@
+[
+    {
+      "id": 1,
+      "name": "John Mwangi",
+      "contact": "+254701234567",
+      "vehicleType": "motorbike",
+      "location": {
+        "latitude": -1.286389,
+        "longitude": 36.817223
+      },
+      "status": "available"
+    },
+    {
+      "id": 2,
+      "name": "Grace Njeri",
+      "contact": "+254701345678",
+      "vehicleType": "bicycle",
+      "location": {
+        "latitude": -1.292066,
+        "longitude": 36.821945
+      },
+      "status": "on-delivery"
+    },
+    {
+      "id": 3,
+      "name": "Peter Otieno",
+      "contact": "+254712345678",
+      "vehicleType": "van",
+      "location": {
+        "latitude": -1.280334,
+        "longitude": 36.816847
+      },
+      "status": "available"
+    },
+    {
+      "id": 4,
+      "name": "Lucy Wambui",
+      "contact": "+254701567890",
+      "vehicleType": "motorbike",
+      "location": {
+        "latitude": -1.303205,
+        "longitude": 36.807255
+      },
+      "status": "on-break"
+    },
+    {
+      "id": 5,
+      "name": "David Kamau",
+      "contact": "+254711345678",
+      "vehicleType": "motorbike",
+      "location": {
+        "latitude": -1.315171,
+        "longitude": 36.843186
+      },
+      "status": "available"
+    },
+    {
+      "id": 6,
+      "name": "Esther Achieng",
+      "contact": "+254701678901",
+      "vehicleType": "bicycle",
+      "location": {
+        "latitude": -1.276221,
+        "longitude": 36.796907
+      },
+      "status": "on-delivery"
+    },
+    {
+      "id": 7,
+      "name": "Paul Nyongesa",
+      "contact": "+254710987654",
+      "vehicleType": "truck",
+      "location": {
+        "latitude": -1.292066,
+        "longitude": 36.931945
+      },
+      "status": "available"
+    },
+    {
+      "id": 8,
+      "name": "Susan Wanjiku",
+      "contact": "+254720456789",
+      "vehicleType": "motorbike",
+      "location": {
+        "latitude": -1.286236,
+        "longitude": 36.824913
+      },
+      "status": "available"
+    },
+    {
+      "id": 9,
+      "name": "James Kariuki",
+      "contact": "+254701234321",
+      "vehicleType": "motorbike",
+      "location": {
+        "latitude": -1.278734,
+        "longitude": 36.815600
+      },
+      "status": "on-break"
+    },
+    {
+      "id": 10,
+      "name": "Anne Muthoni",
+      "contact": "+254710123456",
+      "vehicleType": "bicycle",
+      "location": {
+        "latitude": -1.294556,
+        "longitude": 36.813345
+      },
+      "status": "available"
+    }
+  ]
+  

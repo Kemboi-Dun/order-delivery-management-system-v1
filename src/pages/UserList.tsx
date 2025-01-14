@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { UserListFilterType, UserListProps } from "../types/Types";
+import { UserListFilterType } from "../types/Types";
 import {
   UserListProvider,
   useUserListProvider,
 } from "../context/UserListContext";
-import { Button, Flex, Table, Tag } from "antd";
+import { Button, Flex, Table } from "antd";
 import { useNavigate } from "react-router-dom";
 import DefaultButton from "../components/customComponents/DefaultButton";
 import { useColumnSearch } from "../utils/HelperFunctions";
@@ -20,6 +20,7 @@ const UserListTable: React.FC = () => {
   // Table onchange handler
   const handleChange = (pagination: any, filters: any, statusList: any) => {
     setFilteredInfo(filters);
+    console.log("NULL: ==== ", pagination, statusList);
   };
 
   // reset filters handler

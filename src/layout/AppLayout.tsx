@@ -4,7 +4,6 @@ import AppNavbar from "./AppNavbar";
 import AppFooter from "./AppFooter";
 
 import { Outlet } from "react-router-dom";
-import { OrderDetailProvider } from "../context/OrderDetailContext";
 
 const { Content } = Layout;
 
@@ -37,9 +36,7 @@ const AppLayout = () => {
           }}
         >
           <Content style={outletStyle}>
-            <OrderDetailProvider>
-              <Outlet />
-            </OrderDetailProvider>
+            <Outlet />
           </Content>
         </ConfigProvider>
         <AppFooter />

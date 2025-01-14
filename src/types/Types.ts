@@ -1,4 +1,3 @@
-import { ColumnGroupType, ColumnsType } from "antd/es/table";
 import React, { ReactNode } from "react";
 
 export type CustomerDetailType = {
@@ -124,7 +123,6 @@ export type UserListFilterType = {
   company?: string[];
 };
 
-
 export interface UserInfoType {
   userDetails: CustomerDetailType;
   customerCoordinates: {
@@ -138,5 +136,4 @@ export interface UserInfoType {
 export interface TrackOrderModalInterface {
   openModal: boolean;
   closeModal: () => void;
-
 }

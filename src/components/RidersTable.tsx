@@ -1,7 +1,7 @@
 import React from "react";
 import { useOrderProvider } from "../context/OrdersContext";
 
-const RidersTable = () => {
+const RidersTable:React.FC = () => {
   const { riders, orders } = useOrderProvider();
 
   return (

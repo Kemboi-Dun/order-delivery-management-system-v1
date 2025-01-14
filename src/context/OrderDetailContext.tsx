@@ -19,6 +19,7 @@ interface OrderDetailContextInterface extends OrderDetailsInterface {
   customerDetails: CustomerDetailType;
   customerID: string | number;
   formattedOrderDetails: any; // TODO: Create a type for this
+  setCustomerId_info: (id: number | string) => void;
 }
 
 const OrderDetailContext = createContext<
@@ -93,6 +94,10 @@ export const OrderDetailProvider: React.FC<OrderDetailProviderProps> = ({
   //         setOrderDetail(OrderDetails);
   //     }, []);
 
+  const setCustomerId_info = (customer_id: number | string) => {
+    setCustomerID(customer_id);
+  };
+
   useEffect(() => {
     if (!OrderDetails) {
       navigate("/error");
@@ -108,6 +113,7 @@ export const OrderDetailProvider: React.FC<OrderDetailProviderProps> = ({
         customerDetails,
         customerCoordinates,
         formattedOrderDetails,
+        setCustomerId_info,
       }}
     >
       {children}
