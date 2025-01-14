@@ -19,7 +19,8 @@
     "react-dom": "^18.3.1",
     "react-map-gl": "^7.1.8",
     "react-router-dom": "^7.1.1",
-    "styled-components": "^6.1.14"
+    "styled-components": "^6.1.14",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

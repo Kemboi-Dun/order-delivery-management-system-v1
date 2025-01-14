@@ -1,3 +1,4 @@
+import { Space } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import React from "react";
 
@@ -16,10 +17,10 @@ const versionStyle: React.CSSProperties = {
 const AppFooter = () => {
   return (
     <Footer style={footerStyle}>
-      <span>
-        <p>OMS</p>
+      <Space size="middle">
+        <p>ODMS</p>
         <p style={versionStyle}>V0.0.1</p>
-      </span>
+      </Space>
     </Footer>
   );
 };

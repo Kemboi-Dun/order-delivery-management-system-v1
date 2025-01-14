@@ -1,83 +1,82 @@
 [
-    {
-      "id": 1,
-      "name": "CBD - Kencom",
-      "latitude": -1.285194,
-      "longitude": 36.821946,
-      "description": "Kencom bus terminus in Nairobi CBD, near the National Archives.",
-      "status": "active"
-    },
-    {
-      "id": 2,
-      "name": "Westlands - Sarit Center",
-      "latitude": -1.264375,
-      "longitude": 36.801295,
-      "description": "Pick-up point near Sarit Center, Westlands.",
-      "status": "active"
-    },
-    {
-      "id": 3,
-      "name": "JKIA Terminal",
-      "latitude": -1.319167,
-      "longitude": 36.927500,
-      "description": "Jomo Kenyatta International Airport passenger pick-up area.",
-      "status": "active"
-    },
-    {
-      "id": 4,
-      "name": "Ngong Road - Prestige",
-      "latitude": -1.296140,
-      "longitude": 36.786044,
-      "description": "Prestige Plaza pick-up point along Ngong Road.",
-      "status": "inactive"
-    },
-    {
-      "id": 5,
-      "name": "Ruiru Town",
-      "latitude": -1.144123,
-      "longitude": 36.963123,
-      "description": "Pick-up point near Ruiru stage along Thika Road.",
-      "status": "active"
-    },
-    {
-      "id": 6,
-      "name": "Thika Town",
-      "latitude": -1.040560,
-      "longitude": 37.083377,
-      "description": "Main stage at Thika Town, near Naivas Supermarket.",
-      "status": "active"
-    },
-    {
-      "id": 7,
-      "name": "Karen - The Hub",
-      "latitude": -1.311952,
-      "longitude": 36.720670,
-      "description": "The Hub Mall pick-up point in Karen.",
-      "status": "inactive"
-    },
-    {
-      "id": 8,
-      "name": "Langata - Galleria Mall",
-      "latitude": -1.358494,
-      "longitude": 36.747388,
-      "description": "Pick-up point near Galleria Mall along Langata Road.",
-      "status": "active"
-    },
-    {
-      "id": 9,
-      "name": "Mombasa Road - Syokimau",
-      "latitude": -1.338019,
-      "longitude": 36.927158,
-      "description": "Pick-up point at Syokimau train station along Mombasa Road.",
-      "status": "active"
-    },
-    {
-      "id": 10,
-      "name": "Upper Hill - KMA Center",
-      "latitude": -1.303811,
-      "longitude": 36.808438,
-      "description": "Pick-up point near KMA Center in Upper Hill.",
-      "status": "inactive"
-    }
-  ]
-  
+  {
+    "id": 1,
+    "name": "CBD - Kencom",
+    "latitude": -1.286008,
+    "longitude": 36.820148,
+    "description": "Kencom bus terminus in Nairobi CBD, near the National Archives.",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "name": "Westlands - Sarit Center",
+    "latitude": -1.264375,
+    "longitude": 36.801295,
+    "description": "Pick-up point near Sarit Center, Westlands.",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "name": "JKIA Terminal",
+    "latitude": -1.319167,
+    "longitude": 36.927500,
+    "description": "Jomo Kenyatta International Airport passenger pick-up area.",
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "name": "Ngong Road - Prestige",
+    "latitude": -1.296140,
+    "longitude": 36.786044,
+    "description": "Prestige Plaza pick-up point along Ngong Road.",
+    "status": "inactive"
+  },
+  {
+    "id": 5,
+    "name": "Ruiru Town",
+    "latitude": -1.144123,
+    "longitude": 36.963123,
+    "description": "Pick-up point near Ruiru stage along Thika Road.",
+    "status": "active"
+  },
+  {
+    "id": 6,
+    "name": "Thika Town",
+    "latitude": -1.040560,
+    "longitude": 37.083377,
+    "description": "Main stage at Thika Town, near Naivas Supermarket.",
+    "status": "active"
+  },
+  {
+    "id": 7,
+    "name": "Karen - The Hub",
+    "latitude": -1.311952,
+    "longitude": 36.720670,
+    "description": "The Hub Mall pick-up point in Karen.",
+    "status": "inactive"
+  },
+  {
+    "id": 8,
+    "name": "Langata - Galleria Mall",
+    "latitude": -1.358494,
+    "longitude": 36.747388,
+    "description": "Pick-up point near Galleria Mall along Langata Road.",
+    "status": "active"
+  },
+  {
+    "id": 9,
+    "name": "Mombasa Road - Syokimau",
+    "latitude": -1.338019,
+    "longitude": 36.927158,
+    "description": "Pick-up point at Syokimau train station along Mombasa Road.",
+    "status": "active"
+  },
+  {
+    "id": 10,
+    "name": "Upper Hill - KMA Center",
+    "latitude": -1.303811,
+    "longitude": 36.808438,
+    "description": "Pick-up point near KMA Center in Upper Hill.",
+    "status": "inactive"
+  }
+]
