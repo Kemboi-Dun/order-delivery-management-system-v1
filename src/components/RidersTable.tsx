@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { useOrderProvider } from "../context/OrdersContext";
 import {
-  Alert,
   Badge,
   Button,
   Flex,
+  message,
   notification,
-  Space,
+  Popconfirm,
+  PopconfirmProps,
   Table,
   TableProps,
-  Tag,
 } from "antd";
 import { useColumnSearch } from "../utils/HelperFunctions";
-import DefaultButton from "./customComponents/DefaultButton";
 
 const RidersTable: React.FC = () => {
   const { riders } = useOrderProvider();
@@ -26,6 +25,47 @@ const RidersTable: React.FC = () => {
       message: "Request sent",
       description: " Awaiting confirmation from rider.",
     });
+  };
+
+  const [popUpMessage, setPopUpMessage] = useState<{
+    text: string;
+    description: string;
+    icon: ReactNode;
+  }>({
+    text: "",
+    description: "",
+    icon: <></>,
+  });
+
+  // activation handler
+  const handleRiderActivation = (rider: string) => {
+    setPopUpMessage({
+      text: "Confirm Rider Activation",
+      description: `Activate ${rider}`,
+      icon: (
+        <i
+          className="fa-solid fa-user-check"
+          style={{ color: "#16C47F", marginRight: "0.4em" }}
+        ></i>
+      ),
+    });
+  };
+  // rider deactivation handler
+  const handleRiderDeactivation = (rider: string) => {
+    setPopUpMessage({
+      text: "Confirm Rider Deactivation",
+      description: `Deactivate ${rider}`,
+      icon: (
+        <i
+          className="fa-solid fa-user-xmark"
+          style={{ color: "#FC2947", marginRight: "0.4em" }}
+        ></i>
+      ),
+    });
+  };
+
+  const confirmRiderStatus: PopconfirmProps["onConfirm"] = (e) => {
+    message.info("Rider status updated");
   };
 
   // Rider status tag color handler
@@ -119,32 +159,43 @@ const RidersTable: React.FC = () => {
           >
             Dispatch
           </Button>
-          {record?.status === "deactivated" ? (
-            <Button
-              type="dashed"
-              icon={
-                <i
-                  className="fa-solid fa-user-check"
-                  style={{ color: "#16C47F" }}
-                ></i>
-              }
-            >
-              Activate
-            </Button>
-          ) : (
-            
-            <Button
-              type="text"
-              icon={
-                <i
-                  className="fa-solid fa-user-xmark"
-                  style={{ color: "#FC2947" }}
-                ></i>
-              }
-            >
-              Deactivate
-            </Button>
-          )}
+          <Popconfirm
+            placement="leftBottom"
+            title={popUpMessage?.text}
+            description={popUpMessage?.description}
+            okText="Confirm"
+            cancelText="Cancel"
+            icon={popUpMessage?.icon}
+            onConfirm={confirmRiderStatus}
+          >
+            {record?.status === "deactivated" ? (
+              <Button
+                type="dashed"
+                icon={
+                  <i
+                    className="fa-solid fa-user-check"
+                    style={{ color: "#16C47F" }}
+                  ></i>
+                }
+                onClick={() => handleRiderActivation(record?.name)}
+              >
+                Activate
+              </Button>
+            ) : (
+              <Button
+                type="text"
+                icon={
+                  <i
+                    className="fa-solid fa-user-xmark"
+                    style={{ color: "#FC2947" }}
+                  ></i>
+                }
+                onClick={() => handleRiderDeactivation(record?.name)}
+              >
+                Deactivate
+              </Button>
+            )}
+          </Popconfirm>
         </Flex>
       ),
     },
