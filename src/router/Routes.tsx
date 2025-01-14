@@ -19,6 +19,8 @@ const OrderDetail = Loadable(lazy(() => import("../pages/OrderDetail")));
 
 const UserList = Loadable(lazy(() => import("../pages/UserList")));
 
+const ErrorPage = Loadable(lazy(() => import("../pages/ErrorPage")));
+
 const Routes: RouteObject[] = [
   {
     path: "/",
@@ -41,6 +43,11 @@ const Routes: RouteObject[] = [
         element: <UserList />,
       },
     ],
+  },
+
+  {
+    path: "/error",
+    element: <ErrorPage />,
   },
 ];
 

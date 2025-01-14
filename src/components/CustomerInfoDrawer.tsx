@@ -1,37 +1,40 @@
-import { Button, Drawer, Flex, Tabs, TabsProps, Typography } from "antd";
+import { Drawer, Flex, Tabs, TabsProps, Typography } from "antd";
 import React from "react";
 import CustomerListData from "../data/CustomerList.json";
 import LiveLocationMap from "./LiveLocationMap";
 import CustomerInfoOrders from "./CustomerInfoOrders";
+import { useOrderDetailProvider } from "../context/OrderDetailContext";
+import CustomerLocationWrapper from "./mapWrappers/CustomerLocationWrapper";
 
 const { Title } = Typography;
 
 interface CustomerInfoInterface {
   openInfoDrawer: boolean;
   onCloseInfoDrawer: () => void;
-  customerID: number;
 }
 // style live map wrapper
-export const livemapStyles: React.CSSProperties = {
+const livemapStyles: React.CSSProperties = {
   width: "100%",
   height: "50vh",
 };
 
 const CustomerInfoDrawer: React.FC<CustomerInfoInterface> = ({
-  customerID,
   openInfoDrawer,
   onCloseInfoDrawer,
 }) => {
+  const { customerID } = useOrderDetailProvider();
+
   console.log("ACTIVE USER ID: ====== ", customerID);
 
   // get customer details
   const userDetails = CustomerListData?.find(
-    (customer) => customer.id === customerID
+    (customer) => customer?.id === customerID
   );
 
   // flatten customer address/location
   const customerAddress = userDetails?.location || null;
 
+  // TODO: --- Match with the live version
   const customerCoordinates: any = {
     ...userDetails?.location?.coordinates,
     location: `${userDetails?.location?.area}, ${userDetails?.location?.town}`,
@@ -52,7 +55,9 @@ const CustomerInfoDrawer: React.FC<CustomerInfoInterface> = ({
       label: "Map",
       children: (
         <div style={livemapStyles}>
-          <LiveLocationMap customerCoordinates={customerCoordinates} />
+          {/* TODO:  Update data to match */}
+
+          <CustomerLocationWrapper customerCoordinates={customerCoordinates} />
         </div>
       ),
       icon: <i className="fa-solid fa-map-location-dot"></i>,

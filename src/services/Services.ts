@@ -9,7 +9,7 @@ const OrdersService = {
       ","
     )}; ${routingCoordinates.destination.join(
       ","
-    )}?alternatives=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
+    )}?alternatives=true&geometries=geojson&language=en&overview=full&access_token=${MAPBOX_ACCESS_TOKEN}`;
 
     try {
       const response = await axios.get(directions_URI);

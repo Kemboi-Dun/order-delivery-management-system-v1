@@ -9,7 +9,8 @@ import {
 import React from "react";
 import { useUserListProvider } from "../context/UserListContext";
 import LiveLocationMap from "./LiveLocationMap";
-import { livemapStyles } from "./CustomerInfoDrawer";
+import CustomerLocationWrapper from "./mapWrappers/CustomerLocationWrapper";
+
 
 // user info descriptionsection
 const UserInfoTab: React.FC = () => {
@@ -111,7 +112,7 @@ const UserLocations: React.FC = () => {
 
   return (
     <div style={{width:'100%', height:'70vh'}}>
-      <LiveLocationMap customerCoordinates={userCoordinates} />
+      <CustomerLocationWrapper customerCoordinates={userCoordinates} />
     </div>
   );
 };

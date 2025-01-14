@@ -55,6 +55,9 @@ export type OrderDetailType = {
   orderStatus: string;
   totalAmount: number;
 };
+export interface OrderDetailsInterface {
+  orderDetail: OrderDetailType;
+}
 
 export type PickUpStationType = {
   id: number;
@@ -120,3 +123,20 @@ export type UserListFilterType = {
   address?: string[];
   company?: string[];
 };
+
+
+export interface UserInfoType {
+  userDetails: CustomerDetailType;
+  customerCoordinates: {
+    latitude: number;
+    longitude: number;
+    location: string;
+  };
+  onClose: () => void;
+  open: boolean;
+}
+export interface TrackOrderModalInterface {
+  openModal: boolean;
+  closeModal: () => void;
+
+}

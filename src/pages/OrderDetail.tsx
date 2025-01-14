@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   Breadcrumb,
   Button,
@@ -15,62 +15,40 @@ import {
 } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 
-import orderList from "../data/Orders.json";
-import pickUpStations from "../data/PickUpPoints.json";
+// import pickUpStations from "../data/PickUpPoints.json";
 
-import OrderDetails from "../data/OrderDetails.json";
+// import OrderDetails from "../data/OrderDetails.json";
 
 import { useFormattedDateString } from "../hooks/DateHook";
 import LiveLocationMap from "../components/LiveLocationMap";
 
 import {
-  AddressType,
-  CustomerCoordinates,
-  CustomerDetailType,
-  OrderDetailType,
+  OrderDetailsInterface,
   OrderItemType,
-  PickUpStationType,
+  TrackOrderModalInterface,
+  UserInfoType,
 } from "../types/Types";
-import CustomerInfoDrawer from "../components/CustomerInfoDrawer";
+
 import { statusColorTag } from "../utils/HelperFunctions";
-
-// style live map wrapper
-const livemapStyles: React.CSSProperties = {
-  width: "100%",
-  height: "38vh",
-};
-
-const trackOrderMapStyles: React.CSSProperties = {
-  width: "100%",
-  height: "68vh",
-};
+import {
+  OrderDetailProvider,
+  useOrderDetailProvider,
+} from "../context/OrderDetailContext";
+import { livemapStyles, trackOrderMapStyles } from "../utils/CssProperties";
+import CustomerInfoDrawer from "../components/CustomerInfoDrawer";
+import CustomerLocationWrapper from "../components/mapWrappers/CustomerLocationWrapper";
+import TrackOrderMapWrapper from "../components/mapWrappers/TrackOrderMapWrapper";
+import { OrderMapTrackerProvider } from "../context/OrderMapTrackerContext";
 
 const { Title } = Typography;
 
-interface OrderDetailsInterface {
-  orderDetail: OrderDetailType;
-}
-
-// interface orderItemInterface {
-//   productId: string;
-//   productName: string;
-//   quantity: number;
-//   unitPrice: number;
-//   totalPrice:number;
-// }
-
 // Order items tableOrderItems
-const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
-  const orderItems: OrderItemType[] = useMemo(() => {
-    return orderDetail?.orderItems.map((item: OrderItemType) => ({
-      ...item,
-      key: item.productId,
-    }));
-  }, [orderDetail]);
+const OrderItems: React.FC<OrderDetailsInterface> = () => {
+  const { orderDetail } = useOrderDetailProvider();
 
-  if (orderItems) {
-    console.log("Order Items : --- : +++ ", orderItems);
-  }
+  const orderItems: OrderItemType[] = orderDetail?.orderItems?.map(
+    (item: OrderItemType) => item
+  );
 
   // table columns
   const orderItemsColumns = [
@@ -88,39 +66,46 @@ const OrderItems: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
       title: "Quantity",
       key: "quantity",
       dataIndex: "quantity",
-      sorter: (a: any, b: any) => a.quantity - b.quantity,
+      sorter: (a: any, b: any) => a?.quantity - b?.quantity,
     },
 
     {
       title: "Unit Price",
       key: "unitPrice",
       dataIndex: "unitPrice",
-      sorter: (a: any, b: any) => a.unitPrice - b.unitPrice,
+      sorter: (a: any, b: any) => a?.unitPrice - b?.unitPrice,
       render: (value: number) => <p>KES {value}</p>,
     },
     {
       title: "Total Price",
       key: "totalPrice",
       dataIndex: "totalPrice",
-      sorter: (a: any, b: any) => a.totalPrice - b.totalPrice,
+      sorter: (a: any, b: any) => a?.totalPrice - b?.totalPrice,
       render: (value: number) => <p>KES {value}</p>,
     },
   ];
 
-  return <Table columns={orderItemsColumns} dataSource={orderItems} />;
+  return (
+    <Table
+      columns={orderItemsColumns}
+      dataSource={orderItems}
+      rowKey="productId"
+    />
+  );
 };
 
-const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
-  orderDetail,
-}) => {
+const OrderDetailSection: React.FC = () => {
+  const { orderDetail, customerCoordinates } = useOrderDetailProvider();
+
   // customer drawer states
   const [openCustomerDrawer, setCustomerDrawer] = useState(false);
 
-  const customerCoordinates = {
-    latitude: orderDetail?.customerDetails.address.latitude,
-    longitude: orderDetail?.customerDetails.address.longitude,
-    location: `${orderDetail?.customerDetails.address.name}, ${orderDetail?.customerDetails.address.county}`,
-  };
+  // TODO:: --- Move to provider
+  // const customerCoordinates = {
+  //   latitude: orderDetail?.customerDetails.address.latitude,
+  //   longitude: orderDetail?.customerDetails.address.longitude,
+  //   location: `${orderDetail?.customerDetails.address.name}, ${orderDetail?.customerDetails.address.county}`,
+  // };
 
   // open customer drawer:
   const viewCustomerInfo = () => setCustomerDrawer(true);
@@ -128,23 +113,9 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
 
   // track order modal state
   const [openTrackOrder, setTrackOderModal] = useState(false);
-
   const openTrackOrderModal = () => setTrackOderModal(true);
   const closeTrackOrderModal = () => setTrackOderModal(false);
 
-  const orderDetails = {
-    pickUpStationDetails: {
-      latitude: pickUpStations[0].latitude,
-      longitude: pickUpStations[0].longitude,
-      name: pickUpStations[0].name,
-      id: pickUpStations[0].id,
-      status: pickUpStations[0].status,
-    },
-    description: {
-      orderId: orderDetail?.orderId,
-      status: orderDetail?.orderStatus,
-    },
-  };
   return (
     <div>
       <Flex gap="large" align="center" justify="space-between">
@@ -157,7 +128,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
           <p>
             <b>Expected Delivery date: </b>
             {useFormattedDateString(
-              orderDetail?.deliveryDetails.expectedDeliveryDate
+              orderDetail?.deliveryDetails?.expectedDeliveryDate
             )}
           </p>
         </Space>
@@ -169,6 +140,7 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
         >
           View customer info
         </Button>
+
         <MemoizedUserInfo
           userDetails={orderDetail?.customerDetails}
           onClose={closeCustomerDrawer}
@@ -190,11 +162,10 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
         >
           Track order
         </Button>
+
         <MemoizedTrackOrderModal
           openModal={openTrackOrder}
           closeModal={closeTrackOrderModal}
-          orderDetails={orderDetails}
-          customerCoordinates={customerCoordinates}
         />
 
         <p>
@@ -206,27 +177,13 @@ const OrderDetailSection: React.FC<OrderDetailsInterface> = ({
 };
 
 // user info Drawer
-interface UserInfoType {
-  userDetails: CustomerDetailType;
-  customerCoordinates: {
-    latitude: number;
-    longitude: number;
-    location: string;
-  };
-  onClose: () => void;
-  open: boolean;
-}
+const UserDetailDrawer: React.FC<UserInfoType> = ({ open, onClose }) => {
+  const { customerDetails, customerCoordinates } = useOrderDetailProvider();
 
-const UserDetailDrawer: React.FC<UserInfoType> = ({
-  userDetails,
-  customerCoordinates,
-  open,
-  onClose,
-}) => {
   // flatten customer address
-  const customerAddress = userDetails?.address || null;
+  const customerAddress = customerDetails?.address || null;
   const [openInfoDrawer, setOpenInfoDrawer] = useState(false);
-  const activeUserId = userDetails?.id || 2;
+  // const activeUserId = customerDetails?.id || 2;
 
   return (
     <>
@@ -252,13 +209,13 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
             <Title level={5}>User profile</Title>
             <Flex gap="middle" justify="space-between" align="center" wrap>
               <p>
-                <b>Full name: </b> {userDetails?.name}
+                <b>Full name: </b> {customerDetails?.name}
               </p>
               <p>
-                <b>Email: </b> {userDetails?.email}
+                <b>Email: </b> {customerDetails?.email}
               </p>
               <p>
-                <b>Phone number: </b> {userDetails?.phone}
+                <b>Phone number: </b> {customerDetails?.phone}
               </p>
             </Flex>
           </Flex>
@@ -268,10 +225,10 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
             <Title level={5}>Address</Title>
             <Flex gap="middle" justify="space-between" align="center" wrap>
               <p>
-                <b>Name: </b> {customerAddress.name}
+                <b>Name: </b> {customerAddress?.name}
               </p>
               <p>
-                <b>Street: </b> {customerAddress.street}
+                <b>Street: </b> {customerAddress?.street}
               </p>
               <p>
                 <b>Town: </b> {customerAddress?.town}
@@ -286,12 +243,14 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
             </Flex>
           </Flex>
           <div style={livemapStyles}>
-            <LiveLocationMap customerCoordinates={customerCoordinates} />
+            <CustomerLocationWrapper
+              customerCoordinates={customerCoordinates}
+            />
           </div>
         </Flex>
       </Drawer>
-      <CustomerInfoDrawer
-        customerID={activeUserId}
+
+      <MemoizedCustomerInfoDrawer
         openInfoDrawer={openInfoDrawer}
         onCloseInfoDrawer={() => setOpenInfoDrawer(false)}
       />
@@ -300,39 +259,24 @@ const UserDetailDrawer: React.FC<UserInfoType> = ({
 };
 
 const MemoizedUserInfo = React.memo<UserInfoType>(UserDetailDrawer);
-
-interface TrackOrderModalInterface {
-  openModal: boolean;
-  closeModal: () => void;
-  orderDetails: {
-    pickUpStationDetails: PickUpStationType;
-    description: {
-      orderId: string;
-      status: string;
-    };
-  };
-  customerCoordinates: CustomerCoordinates;
-}
+const MemoizedCustomerInfoDrawer = React.memo(CustomerInfoDrawer);
 
 // Track order Modal
 const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
-  orderDetails,
-  customerCoordinates,
   openModal,
   closeModal,
 }) => {
+  const { orderDetail, customerCoordinates } = useOrderDetailProvider();
+
   return (
     <Modal
       title={
-        <>
-          <Flex gap="large" justify="start" align="center">
-            <Space align="center" size="large">
-              <p>Track order: {orderDetails?.description?.orderId}</p>
-
-              <Tag color="orange">{orderDetails?.description?.status}</Tag>
-            </Space>
-          </Flex>
-        </>
+        <Flex gap="large" justify="start" align="center">
+          <Space align="center" size="large">
+            <p>Track order: {orderDetail?.orderId}</p>
+            <Tag color="orange">{orderDetail?.orderStatus}</Tag>
+          </Space>
+        </Flex>
       }
       centered
       footer={null}
@@ -349,10 +293,9 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
       }}
     >
       <div style={trackOrderMapStyles}>
-        <LiveLocationMap
-          customerCoordinates={customerCoordinates}
-          orderDetails={orderDetails}
-        />
+        <OrderMapTrackerProvider>
+          <TrackOrderMapWrapper customerCoordinates={customerCoordinates} />
+        </OrderMapTrackerProvider>
       </div>
     </Modal>
   );
@@ -361,11 +304,12 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
 const MemoizedTrackOrderModal = React.memo(TrackOrderModal);
 
 // Order detail section
-const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
-  const paymentDetails = orderDetail?.paymentDetails || null;
-  const deliveryDetails = orderDetail?.deliveryDetails || null;
+const OrderInfoSection: React.FC = () => {
+  const { orderDetail } = useOrderDetailProvider();
 
   // order details [payment and address]
+  const paymentDetails = orderDetail?.paymentDetails || null;
+  const deliveryDetails = orderDetail?.deliveryDetails || null;
 
   const transactionId: any = () => {
     // return transaction ID info if payment method is M-PESA
@@ -377,7 +321,7 @@ const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
         key: "transactionId",
         label: "Transaction ID",
         children: paymentDetails?.transactionId,
-      span:3
+        span: 3,
       };
     }
   };
@@ -387,20 +331,20 @@ const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
       key: "paymentMethod",
       label: "Payment Method",
       children: paymentDetails?.paymentMethod,
-     span:3
+      span: 3,
     },
     transactionId(),
     {
       key: "amount",
       label: "Amount paid",
       children: paymentDetails?.amountPaid,
-      span:3
+      span: 3,
     },
     {
       key: "paymentDate",
       label: "Payment Date",
       children: useFormattedDateString(paymentDetails?.paymentDate),
-      span:3
+      span: 3,
     },
   ];
 
@@ -408,75 +352,72 @@ const OrderInfoSection: React.FC<OrderDetailsInterface> = ({ orderDetail }) => {
     {
       key: "name",
       label: "Name",
-      children: deliveryDetails?.deliveryAddress.name,
-      span:3
+      children: deliveryDetails?.deliveryAddress?.name,
+      span: 3,
     },
     {
       key: "street",
       label: "Street",
-      children: deliveryDetails?.deliveryAddress.street,
-      span:3
+      children: deliveryDetails?.deliveryAddress?.street,
+      span: 3,
     },
     {
       key: "town",
       label: "Town",
-      children: deliveryDetails?.deliveryAddress.town,
-      span:3
+      children: deliveryDetails?.deliveryAddress?.town,
+      span: 3,
     },
     {
       key: "postalCode",
       label: "Postal Code",
-      children: deliveryDetails?.deliveryAddress.postalCode,
-      span:3
+      children: deliveryDetails?.deliveryAddress?.postalCode,
+      span: 3,
     },
     {
       key: "county",
       label: "County",
       children: `${deliveryDetails?.deliveryAddress?.county}, ${deliveryDetails?.deliveryAddress?.country}`,
-      span:3
+      span: 3,
     },
   ];
 
   return (
     <>
- 
-
-
-
-<Flex
+      <Flex
         gap="middle"
         align="start"
         style={{ height: "100%", width: "100%" }}
       >
         <OrderItems orderDetail={orderDetail} />
 
-       
-<div style={{ width: "40%", height: "100%", overflowY: "auto"}}>
-
-        <Descriptions items={paymentItems} title="Payment Details" />
-      <Divider/>
-      <Descriptions
-        items={deliveryItems}
-        title="Delivery Details"
-        extra={
-          <p style={{ textDecoration: "underline" }}>
-            <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
-          </p>
-        }
-      />
-</div>
-
+        <div style={{ width: "40%", height: "100%", overflowY: "auto" }}>
+          <Descriptions items={paymentItems} title="Payment Details" />
+          <Divider />
+          <Descriptions
+            items={deliveryItems}
+            title="Delivery Details"
+            extra={
+              <p style={{ textDecoration: "underline" }}>
+                <b>Delivery Fee:</b> {deliveryDetails?.deliveryFee}
+              </p>
+            }
+          />
+        </div>
       </Flex>
-
     </>
   );
 };
 
-const OrderDetail = () => {
+// order Section header
+const OrderDetailHeader: React.FC = () => {
+  const { orderDetail } = useOrderDetailProvider();
+  // console.log("ORDER DETAIL [RE-STRUCTURED] : ---- ", orderDetail);
+
   const urlParams = useParams();
   const orderId = urlParams?.order_id;
   const navigate = useNavigate();
 
+  // Order detail params
   const orderDetailBreadcrumbItems = [
     {
       title: <a href="/">Orders</a>,
@@ -485,17 +426,10 @@ const OrderDetail = () => {
       title: "Order detail",
     },
   ];
-
-  // get order from order list
-  // const orderDetail = useMemo(() => {
-  //   return orderList.find((order) => order.orderId === orderId);
-  // }, [orderId]);
-
-  console.log("ORDER DETAIL [RE-STRUCTURED] : ---- ", OrderDetails);
-
   return (
-    <div style={{ padding: "1em" }}>
+    <>
       <Breadcrumb items={orderDetailBreadcrumbItems} />
+
       <Button
         type="dashed"
         onClick={() => navigate("/")}
@@ -504,18 +438,27 @@ const OrderDetail = () => {
       >
         Back
       </Button>
+
       <Flex align="center" gap="large">
         <h1>Order ID: {orderId}</h1>
 
-        <Tag color={statusColorTag(OrderDetails?.orderStatus)}>
-          {OrderDetails?.orderStatus}
+        <Tag color={statusColorTag(orderDetail?.orderStatus)}>
+          {orderDetail?.orderStatus}
         </Tag>
       </Flex>
+    </>
+  );
+};
 
-      <OrderDetailSection orderDetail={OrderDetails} />
-
-      <OrderInfoSection orderDetail={OrderDetails} />
-    </div>
+const OrderDetail: React.FC = () => {
+  return (
+    <OrderDetailProvider>
+      <div style={{ padding: "1em" }}>
+        <OrderDetailHeader />
+        <OrderDetailSection />
+        <OrderInfoSection />
+      </div>
+    </OrderDetailProvider>
   );
 };
 

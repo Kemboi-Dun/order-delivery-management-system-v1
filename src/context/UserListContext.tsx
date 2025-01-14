@@ -93,6 +93,7 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
 
 export const useUserListProvider = () => {
   const context = React.useContext(UserListContext);
+
   if (!context) {
     throw new Error(
       "UserListContext can only be used inside the UserListProvider!"

@@ -26,15 +26,15 @@
     "status": "Dispatched",
     "orderDate": "2024-12-29T08:30:00+03:00",
     "shippingAddress": {
-      "name": "Kenyatta Market",
-      "addressLine1": "Kenyatta Market",
-      "addressLine2": "Shop 150",
+      "name": "Strathmore University, Nairobi",
+      "addressLine1": "Strathmore, Nairobi",
+      "addressLine2": "Shop 150, Siwaka",
       "city": "Nairobi",
       "county": "Nairobi",
       "postalCode": "00100",
       "country": "Kenya",
-      "latitude": -1.3074322257410578,
-      "longitude": 36.801307396635785
+      "latitude": -1.3087242258668748,
+      "longitude": 36.8119741957176
     },
     "paymentMethod": "Mpesa",
     "deliveryTime": "2024-12-29T14:00:00+03:00"
