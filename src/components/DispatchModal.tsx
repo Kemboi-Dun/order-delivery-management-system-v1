@@ -47,13 +47,14 @@ const DispatchModal: React.FC<DispatchTableProps> = ({
         open={open}
         onCancel={setCloseModal}
         footer={null}
+        centered
         width={{
           xs: "90%",
           sm: "80%",
           md: "70%",
-          lg: "70%",
-          xl: "50%",
-          xxl: "60%",
+          lg: "80%",
+          xl: "80%",
+          xxl: "80%",
         }}
       >
         <Tabs items={riderModalTabs} defaultActiveKey="riders" />

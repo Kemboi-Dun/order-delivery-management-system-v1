@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import LiveLocationMap from "../LiveLocationMap";
 import { useOrderProvider } from "../../context/OrdersContext";
 import { Marker, Popup } from "react-map-gl";
-import { Badge, Flex } from "antd";
+import { Badge, Button, Flex, notification } from "antd";
 
 const RidersMapWrapper: React.FC = () => {
   const { riders } = useOrderProvider();
@@ -72,13 +72,25 @@ const RidersMapWrapper: React.FC = () => {
         return "default";
     }
   };
+  const [api, contextHolder] = notification.useNotification();
+
+  // handle rider assignment
+  const handleRiderAssignment = () => {
+    api["info"]({
+      message: "Request sent",
+      description: " Awaiting confirmation from rider.",
+    });
+  };
 
   useEffect(() => {
-    getCurrentLocation();
-  }, []);
+    if (!riderLocations) {
+      getCurrentLocation();
+    }
+  }, [riderLocations]);
 
   return (
     <div style={{ width: "100%", height: "70vh" }}>
+      {contextHolder}
       <LiveLocationMap currentViewPort={currentLocation}>
         {/* <Source
         id="rider-locations-wrapper"
@@ -101,7 +113,7 @@ const RidersMapWrapper: React.FC = () => {
               key={index}
               latitude={location?.latitude}
               longitude={location?.longitude}
-              color="black"
+              color={location?.status === "available" ? "green" : "black"}
               onClick={(e) => {
                 e.originalEvent.stopPropagation();
                 // console.log(location);
@@ -117,11 +129,20 @@ const RidersMapWrapper: React.FC = () => {
                 onClose={() => setRiderPopup(false)}
               >
                 <Flex vertical gap="small">
-                  <p>{riderPopUp?.name}</p>
+                  <p style={{ fontWeight: "bold" }}>{riderPopUp?.name}</p>
                   <Badge
                     status={getTagStatusColor(riderPopUp?.status)}
                     text={riderPopUp?.status}
                   />
+                  {riderPopUp?.status === "available" && (
+                    <Button
+                      size="small"
+                      type="primary"
+                      onClick={handleRiderAssignment}
+                    >
+                      Assign
+                    </Button>
+                  )}
                 </Flex>
               </Popup>
             )}
