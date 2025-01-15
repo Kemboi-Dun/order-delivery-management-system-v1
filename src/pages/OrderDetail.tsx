@@ -264,7 +264,7 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
   openModal,
   closeModal,
 }) => {
-  const { orderDetail, customerCoordinates } = useOrderDetailProvider();
+  const { orderDetail } = useOrderDetailProvider();
 
   return (
     <Modal
@@ -292,7 +292,7 @@ const TrackOrderModal: React.FC<TrackOrderModalInterface> = ({
     >
       <div style={trackOrderMapStyles}>
         <OrderMapTrackerProvider>
-          <TrackOrderMapWrapper customerCoordinates={customerCoordinates} />
+          <TrackOrderMapWrapper />
         </OrderMapTrackerProvider>
       </div>
     </Modal>
@@ -387,9 +387,8 @@ const OrderInfoSection: React.FC = () => {
         style={{ height: "100%", width: "100%" }}
         justify="space-between"
       >
-        <div style={{width:"50%"}}>
-
-        <OrderItems orderDetail={orderDetail} />
+        <div style={{ width: "50%" }}>
+          <OrderItems orderDetail={orderDetail} />
         </div>
 
         <div style={{ width: "40%", height: "100%", overflowY: "auto" }}>
