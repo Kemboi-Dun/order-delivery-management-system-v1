@@ -36,7 +36,7 @@ const HomePage: React.FC = () => {
   );
 
   const onChange = (key: string) => {
-    console.log(key);
+    // console.log(key);
     const title = key.charAt(0).toUpperCase() + key.slice(1);
     setTabTitle(title);
   };

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import LiveLocationMap from "../LiveLocationMap";
 import { useOrderProvider } from "../../context/OrdersContext";
 import { Marker, Popup } from "react-map-gl";
 import { Badge, Button, Flex, notification } from "antd";
+import { boundCoordinatesTypes } from "../../types/Types";
+import { calculateBounds } from "../../utils/HelperFunctions";
 
 const RidersMapWrapper: React.FC = () => {
   const { riders } = useOrderProvider();
@@ -19,28 +21,37 @@ const RidersMapWrapper: React.FC = () => {
     longitude: rider?.location?.longitude,
   }));
 
-  console.log("Rider Locations ==== ", riderLocations);
+  // find bounds coordinates
+  const formattedBounds: boundCoordinatesTypes[] = riderLocations?.map(
+    (location) => ({ lng: location?.longitude, lat: location?.latitude })
+  );
+  // console.log("Rider Locations [Bounds] ==== ", formattedBounds);
+
+  const getBoundsViewPort = () => {
+    const { latitude, longitude, zoom } = calculateBounds(formattedBounds);
+    setCurrentLocation({ latitude, longitude, zoom });
+  };
 
   // current location hanlder
-  const getCurrentLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        if (latitude & longitude) {
-          setCurrentLocation((prev: any) => ({
-            ...prev,
-            latitude,
-            longitude,
-            zoom: 8,
-          }));
-        }
-      },
-      (error) => {
-        console.error("Error getting current location: === ", error);
-      },
-      { enableHighAccuracy: true }
-    );
-  };
+  // const getCurrentLocation = () => {
+  //   navigator.geolocation.getCurrentPosition(
+  //     (position) => {
+  //       const { latitude, longitude } = position.coords;
+  //       if (latitude & longitude) {
+  //         setCurrentLocation((prev: any) => ({
+  //           ...prev,
+  //           latitude,
+  //           longitude,
+  //           zoom: 8,
+  //         }));
+  //       }
+  //     },
+  //     (error) => {
+  //       console.error("Error getting current location: === ", error);
+  //     },
+  //     { enableHighAccuracy: true }
+  //   );
+  // };
 
   // geojson formatting handler
   //   const riderGeoJsonData = {
@@ -83,10 +94,35 @@ const RidersMapWrapper: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!riderLocations) {
-      getCurrentLocation();
-    }
-  }, [riderLocations]);
+    // if (riderLocations) {
+    //   getBoundsViewPort();
+    // } else {
+    //   getCurrentLocation();
+    // }
+    getBoundsViewPort();
+  }, []);
+
+
+interface RiderMarkerProps {
+  location: {
+    name: string;
+    status: string;
+    latitude: number;
+    longitude: number;
+  };
+  onClick: (e: any) => void;
+}
+
+const RiderMarker: React.FC<RiderMarkerProps> = memo(({ location, onClick }) => (
+  <Marker
+    latitude={location?.latitude}
+    longitude={location?.longitude}
+    color={location?.status === "available" ? "green" : "black"}
+    onClick={onClick}
+    style={{ cursor: "pointer", pointerEvents: "auto" }}
+  />
+));
+
 
   return (
     <div style={{ width: "100%", height: "70vh" }}>
@@ -108,19 +144,15 @@ const RidersMapWrapper: React.FC = () => {
       </Source> */}
 
         {riderLocations?.map((location, index) => (
-          <>
-            <Marker
-              key={index}
-              latitude={location?.latitude}
-              longitude={location?.longitude}
-              color={location?.status === "available" ? "green" : "black"}
-              onClick={(e) => {
-                e.originalEvent.stopPropagation();
-                // console.log(location);
-                setRiderPopup(location);
-              }}
-              style={{ cursor: "pointer", pointerEvents: "auto" }}
-            ></Marker>
+          <div key={index}>
+         <RiderMarker location={location} onClick={(e) => {
+    e.originalEvent.stopPropagation();
+    // console.log(location);
+    setRiderPopup(location);
+  }}/>
+        
+          </div>
+        ))}
             {riderPopUp && (
               <Popup
                 latitude={riderPopUp?.latitude}
@@ -146,8 +178,6 @@ const RidersMapWrapper: React.FC = () => {
                 </Flex>
               </Popup>
             )}
-          </>
-        ))}
       </LiveLocationMap>
     </div>
   );

@@ -67,7 +67,7 @@ export const UserListProvider: React.FC<UserListProviderProps> = ({
   useEffect(() => {
     // Get user details
     if (userID) {
-      console.log("CURRENT USER : +++++ ", userID);
+      // console.log("CURRENT USER : +++++ ", userID);
       const user = users?.find((user) => user.id === userID);
       setUserDetail(user);
     }

@@ -2,6 +2,8 @@ import { FilterFilled, SearchOutlined } from "@ant-design/icons";
 import { Button, Flex, Input, Space } from "antd";
 import { get } from "lodash";
 import { useRef, useState } from "react";
+import { boundCoordinatesTypes } from "../types/Types";
+import { fitBounds } from "@math.gl/web-mercator";
 
 // handle the color of the status tag or any tag
 export const statusColorTag = (status: string) => {
@@ -143,4 +145,24 @@ export const useColumnSearch = () => {
   });
 
   return { getColumnSearchProps };
+};
+
+// location bounds handler
+export const calculateBounds = (coordinates: boundCoordinatesTypes[]) => {
+  const longitudes = coordinates?.map((coords) => coords.lng);
+  const latitudes = coordinates?.map((coords) => coords.lat);
+
+  const bounds: [[number, number], [number, number]] = [
+    [Math.min(...longitudes), Math.min(...latitudes)],
+    [Math.max(...longitudes), Math.max(...latitudes)],
+  ];
+
+  const { longitude, latitude, zoom } = fitBounds({
+    width: window.innerWidth,
+    height: window.innerHeight * 0.75,
+    bounds,
+    padding: 30,
+  });
+
+  return { longitude, latitude, zoom };
 };

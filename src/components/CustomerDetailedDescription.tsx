@@ -22,7 +22,7 @@ const CustomerDetailedDescription: React.FC<CustomerProfileProps> = ({
   customerID,
   
 }) => {
-  console.log("ACTIVE USER ID: ====== ", typeof customerID);
+  // console.log("ACTIVE USER ID: ====== ", typeof customerID);
 
   const [userDetails, setUserDetails] = useState<any>();
 
@@ -32,7 +32,7 @@ const CustomerDetailedDescription: React.FC<CustomerProfileProps> = ({
 
     setUserDetails(userInfo);
   }, [customerID]);
-  console.log("User details : ===== ", userDetails);
+  // console.log("User details : ===== ", userDetails);
 
   // flatten customer address/location
   const customerAddress = userDetails?.location || null;

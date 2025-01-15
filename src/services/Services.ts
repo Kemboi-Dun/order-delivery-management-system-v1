@@ -21,7 +21,7 @@ const OrdersService = {
 
       return response.data;
     } catch (error: any) {
-      console.log("ERROR GETTING ROUTE: --- ", error?.message);
+      console.error("ERROR GETTING ROUTE: --- ", error?.message);
       throw error;
     }
   },

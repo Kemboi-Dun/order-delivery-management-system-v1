@@ -7,6 +7,7 @@ import { Badge, Button, Flex, Space, Tooltip } from "antd";
 import { FullscreenControl, Layer, Marker, Popup, Source } from "react-map-gl";
 import DirectionsDrawer from "../DirectionsDrawer";
 import { useOrderMapTrackerProvider } from "../../context/OrderMapTrackerContext";
+import { calculateBounds } from "../../utils/HelperFunctions";
 
 interface TrackOrderMapWrapperProps {
   customerCoordinates: {
@@ -70,10 +71,11 @@ const TrackOrderMapWrapper: React.FC<TrackOrderMapWrapperProps> = ({
       const response = await OrdersService.getDeliveryRoute(routingCoordinates);
 
       if (response?.routes?.length) {
-        console.log("Route RESPONSE --- ", response);
+        // console.log("Route RESPONSE --- ", response);
         setRoutingInfo(response);
         // setDeliveryRoute(response?.routes[0].geometry);
         setActiveRoute(response?.routes[0].geometry);
+        getBoundsViewPort();
         setOpenDirectionsDrawer(true);
       } else {
         console.log("Routes not found");
@@ -130,6 +132,21 @@ const TrackOrderMapWrapper: React.FC<TrackOrderMapWrapperProps> = ({
         </Button>
       );
     }
+  };
+
+  // get viewort bounds
+  const viewPortCoordinates = [
+    { lng: routingCoordinates.origin[0], lat: routingCoordinates.origin[1] },
+    {
+      lng: routingCoordinates.destination[0],
+      lat: routingCoordinates.destination[1],
+    },
+  ];
+
+  // viewport bounds handler
+  const getBoundsViewPort = () => {
+    const { latitude, longitude, zoom } = calculateBounds(viewPortCoordinates);
+    setActiveViewPort({ latitude, longitude, zoom });
   };
 
   useEffect(() => {
