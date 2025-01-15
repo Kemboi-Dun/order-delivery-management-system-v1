@@ -9,17 +9,15 @@ import DirectionsDrawer from "../DirectionsDrawer";
 import { useOrderMapTrackerProvider } from "../../context/OrderMapTrackerContext";
 import { calculateBounds } from "../../utils/HelperFunctions";
 
-interface TrackOrderMapWrapperProps {
-  customerCoordinates: {
-    latitude: number;
-    longitude: number;
-    location: string;
-  };
-}
+// interface TrackOrderMapWrapperProps {
+//   customerCoordinates: {
+//     latitude: number;
+//     longitude: number;
+//     location: string;
+//   };
+// }
 
-const TrackOrderMapWrapper: React.FC<TrackOrderMapWrapperProps> = ({
-  customerCoordinates,
-}) => {
+const TrackOrderMapWrapper: React.FC = () => {
   const { setActiveRoute, activeRoute } = useOrderMapTrackerProvider();
 
   const { formattedOrderDetails } = useOrderDetailProvider();
@@ -152,14 +150,13 @@ const TrackOrderMapWrapper: React.FC<TrackOrderMapWrapperProps> = ({
   useEffect(() => {
     const { latitude, longitude } =
       formattedOrderDetails?.pickUpStationDetails ||
-      formattedOrderDetails?.deliveryDetails ||
-      customerCoordinates;
+      formattedOrderDetails?.deliveryDetails;
 
     setPickUpLocation(formattedOrderDetails?.pickUpStationDetails);
     setDeliveryLocation(formattedOrderDetails?.deliveryDetails);
 
     setActiveViewPort({ latitude, longitude });
-  }, [formattedOrderDetails, customerCoordinates]);
+  }, [formattedOrderDetails]);
 
   return (
     <LiveLocationMap currentViewPort={activeViewPort}>
