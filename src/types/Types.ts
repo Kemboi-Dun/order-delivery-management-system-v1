@@ -132,3 +132,9 @@ export interface TrackOrderModalInterface {
   openModal: boolean;
   closeModal: () => void;
 }
+
+
+export type boundCoordinatesTypes = {
+  lng:number,
+  lat:number
+}

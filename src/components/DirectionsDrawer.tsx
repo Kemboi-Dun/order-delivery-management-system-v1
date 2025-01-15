@@ -1,5 +1,5 @@
 import { Divider, Drawer, Flex, Radio, RadioChangeEvent, Space } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useOrderMapTrackerProvider } from "../context/OrderMapTrackerContext";
 
 // directions  card drawer interface
@@ -27,7 +27,7 @@ const DirectionsDrawer: React.FC<DirectionsCardInterface> = ({
   // Format duration to hours, minutes
 
   const convertDurationToHoursAndMinutes = (seconds: number) => {
-    console.log("SECONDS VALUE === ", seconds);
+   
     const minutes = seconds / 60;
     if (minutes >= 60) {
       const hours = Math.ceil(minutes / 60);
@@ -54,11 +54,6 @@ const DirectionsDrawer: React.FC<DirectionsCardInterface> = ({
     setActiveRoute(routes[e.target.value]?.geometry);
   };
 
-  useEffect(() => {
-    if (alternateRoute) {
-      console.log("CURRENT ALTERNATE ROUTE: =====", alternateRoute);
-    }
-  }, [alternateRoute]);
   return (
     <Drawer
       title="Route directions"

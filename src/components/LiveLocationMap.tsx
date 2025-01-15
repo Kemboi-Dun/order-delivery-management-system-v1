@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import Map, { NavigationControl } from "react-map-gl";
+import { notification } from "antd";
 
 interface LiveLocationMapInterface {
   currentViewPort: {
@@ -33,24 +34,30 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   const [viewPort, setViewPort] = useState({
     latitude: -1.286389,
     longitude: 36.817223,
-    zoom: 14,
+    zoom: 12.8,
+    // zoom: 9,
   });
 
+  const [api, contextHolder] = notification.useNotification();
+  const handleLocationError = () => {
+    api["error"]({
+      message: "Location error",
+      description: " Unable to retrieve your location.",
+    });
+  };
   // use user's current location as default view port
   const getCurrentUserLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         if (latitude && longitude) {
-          setViewPort((prev) => ({
-            ...prev,
-            latitude,
-            longitude,
-          }));
+          setViewPort({ latitude, longitude, zoom: 12.5 });
         }
       },
       (error) => {
         console.error("ERROR GETTING USER'S CURRENT LOCATION ----", error);
+
+        handleLocationError();
       },
       {
         enableHighAccuracy: true,
@@ -58,24 +65,32 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
     );
   };
 
-  console.log("CURRENT ACTIVE PORT +++++ ", currentViewPort);
+  // console.log("CURRENT ACTIVE PORT +++++ ", currentViewPort);
 
-  // formattedOrderDetails?.pickUpStationDetails ||
+  // useEffect(() => {
+  //   const { latitude, longitude } = currentViewPort || viewPort;
+  //   if (latitude && longitude) {
+  //     setViewPort((prev) => ({
+  //       ...prev,
+  //       latitude,
+  //       longitude,
+  //     }));
+  //   } else {
+  //     getCurrentUserLocation(); // Use the user location if none of the above is provided
+  //   }
+  // }, [currentViewPort]);
+
   useEffect(() => {
-    const { latitude, longitude } = currentViewPort || viewPort;
-    if (latitude && longitude) {
-      setViewPort((prev) => ({
-        ...prev,
-        latitude,
-        longitude,
-      }));
+    if ((currentViewPort?.longitude, currentViewPort?.latitude)) {
+      setViewPort((prev) => ({ ...prev, ...currentViewPort }));
     } else {
-      getCurrentUserLocation(); // Use the user location if none of the above is provided
+      getCurrentUserLocation();
     }
   }, [currentViewPort]);
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
+      {contextHolder}
       <Map
         {...viewPort}
         style={{ width: "100%", height: "100%" }}
@@ -84,7 +99,6 @@ const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
         onMove={(e) => setViewPort(e.viewState)}
       >
         <NavigationControl />
-
         {children}
       </Map>
     </div>

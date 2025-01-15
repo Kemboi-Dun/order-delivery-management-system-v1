@@ -6,5 +6,5 @@ export const livemapStyles: React.CSSProperties = {
 
 export const trackOrderMapStyles: React.CSSProperties = {
   width: "100%",
-  height: "68vh",
+  height: "80vh",
 };

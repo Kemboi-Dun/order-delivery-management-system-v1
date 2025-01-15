@@ -55,7 +55,7 @@ const OrdersTable: React.FC = () => {
   };
 
   const handleChange = (pagination: any, filters: any, statusList: any) => {
-    console.log("CHANGED PARAMS : --- ", filters);
+    // console.log("CHANGED PARAMS : --- ", filters);
     console.log("NULL: ==== ", pagination, statusList);
     setFilteredInfo(filters);
     // setStatusFilter(statusList);
@@ -71,13 +71,13 @@ const OrdersTable: React.FC = () => {
   };
 
   //handle delete order
-  const confirmDelete: PopconfirmProps["onConfirm"] = (e) => {
-    console.log(e);
+  const confirmDelete: PopconfirmProps["onConfirm"] = () => {
+    // console.log(e);
     message.success("Order deleted");
   };
 
-  const cancelDelete: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
+  const cancelDelete: PopconfirmProps["onCancel"] = () => {
+    // console.log(e);
     message.error("Order not deleted");
   };
 

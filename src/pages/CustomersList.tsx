@@ -59,9 +59,9 @@ const CustomersList: React.FC = () => {
     {
       title: "Last Order",
       key: "lastOrder",
-      render: (text: any, record: any) => {
+      render: (_: any, record: any) => {
         const lastOrder = record.orders[0];
-        console.log("TEST: ---- ", text);
+        // console.log("NULL: ---- ", text);
         return lastOrder ? (
           <>
             <p>Order ID: {lastOrder?.orderId}</p>
@@ -121,13 +121,13 @@ const CustomersList: React.FC = () => {
   const [customerData, setCustomerData] = useState<any[]>(CustomerListData);
 
   //handle deactivate
-  const confirmDeactivate: PopconfirmProps["onConfirm"] = (e) => {
-    console.log(e);
+  const confirmDeactivate: PopconfirmProps["onConfirm"] = () => {
+    // console.log(e);
     message.success("User deactivated");
   };
 
-  const cancelDeactivate: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
+  const cancelDeactivate: PopconfirmProps["onCancel"] = () => {
+    // console.log(e);
     message.error("Deactivation canceled");
   };
 
