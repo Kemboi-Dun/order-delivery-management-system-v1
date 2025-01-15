@@ -18,6 +18,8 @@ import FilterButton from "../components/customComponents/FilterButton";
 
 import { useColumnSearch } from "../utils/HelperFunctions";
 import DispatchModal from "../components/DispatchModal";
+import DefaultButton from "../components/customComponents/DefaultButton";
+import OrdersMapModal from "../components/OrdersMapModal";
 
 // filter values
 
@@ -83,9 +85,13 @@ const OrdersTable: React.FC = () => {
 
   // Rider modal handler
   const [openRiderModal, setOpenRiderModal] = useState(false);
+  const [openOrdersMap, setOpenOrdersMap] = useState(false);
 
   const OpenRiderModal = () => setOpenRiderModal(true);
   const CloseRiderModal = () => setOpenRiderModal(false);
+
+  const OpenOrdersModal = () => setOpenOrdersMap(true);
+  const CloseOrdersModal = () => setOpenOrdersMap(false);
 
   // Orders table columns
   const ordersColumns = [
@@ -355,13 +361,22 @@ const OrdersTable: React.FC = () => {
             <p>Canceled orders ({getOrdersByStatus("Canceled")})</p>
           </FilterButton>
         </Space>
+        <Space size="small">
+          <DefaultButton
+            type="primary"
+            icon={<i className="fa-solid fa-map-location"></i>}
+            onClick={OpenOrdersModal}
+          >
+            View locations
+          </DefaultButton>
 
-        <Button
-          icon={<i className="fa-solid fa-filter-circle-xmark"></i>}
-          onClick={clearFilters}
-        >
-          Clear Filters
-        </Button>
+          <Button
+            icon={<i className="fa-solid fa-filter-circle-xmark"></i>}
+            onClick={clearFilters}
+          >
+            Clear Filters
+          </Button>
+        </Space>
       </Flex>
 
       <Table
@@ -372,6 +387,7 @@ const OrdersTable: React.FC = () => {
         rowKey="orderId"
       />
       <DispatchModal open={openRiderModal} setCloseModal={CloseRiderModal} />
+      <OrdersMapModal open={openOrdersMap} setCloseModal={CloseOrdersModal} />
     </>
   );
 };
