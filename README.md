@@ -15,20 +15,25 @@ cd order-delivery-management-system-v1
 npm install
  ```
 
-> [!WARNING]
-> ``VITE_MAPBOX_ACCESS_TOKEN`` variable should be in an .env file.
+4. Setup environment variables
 
-4. Run development server:
+Add the following to an env file in the root directory
+```
+VITE_MAPBOX_ACCESS_TOKEN = "your_mapbox_access_token"
+```
+Replace `` your_mapbox_access_token `` with your access token.
+
+5. Run development server:
 ``` 
 npm run dev
  ```
 
-5. Build the project:
+6. Build the project:
 ```
  npm run build 
  ```
 
-6. Preview the project ( production build)
+7. Preview the project ( production build)
 ```
  npm run preview 
  ```

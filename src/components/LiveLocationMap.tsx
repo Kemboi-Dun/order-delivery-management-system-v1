@@ -24,9 +24,7 @@ interface LiveLocationMapInterface {
 }
 
 // mapbox access token
-// const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN; 
-const MAPBOX_ACCESS_TOKEN =
-  "pk.eyJ1Ijoia2VtYm9pLWR1biIsImEiOiJjbTN5c2o2N3ExaXRsMmtzZmtwbHhrZDNmIn0.T5ozOkEHfYLWqqpl8cuVJg"; //! FOR DEMOSTRATION PURPOSES ONLY
+const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 const LiveLocationMap: React.FC<LiveLocationMapInterface> = ({
   children,
