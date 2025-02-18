@@ -248,7 +248,7 @@ const TrackOrderMapWrapper: React.FC = () => {
               onClose={() => setDeliveryPopUp(false)}
               anchor="top"
             >
-              <Flex gap="small" align="center">
+              <Flex gap="small" align="center" vertical>
                 <i className="fa-solid fa-arrows-to-circle"></i>
                 <p>{deliveryLocation?.location}</p>
               </Flex>

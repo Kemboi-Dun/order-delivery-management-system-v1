@@ -159,7 +159,7 @@ export const calculateBounds = (coordinates: boundCoordinatesTypes[]) => {
 
   const { longitude, latitude, zoom } = fitBounds({
     width: window.innerWidth,
-    height: window.innerHeight * 0.75,
+    height: window.innerHeight * 0.50,
     bounds,
     padding: 30,
   });
